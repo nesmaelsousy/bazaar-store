@@ -18,9 +18,9 @@
                                 <div class="">
                                     <div class="input-group input-group-sm">
                                        
-                                        <x-form.input name="name" placeholder="Search by name" :oldVal="request('name')"
+                                        <x-form.input name="number" placeholder="Search by order number" :oldVal="request('number')"
                                             style="width:500px" />
-                                        <div class="input-group-append">
+                                        <div  >
                                             <button type="submit" class="btn btn-default">
                                                 <i class="fas fa-search"></i>
                                             </button>
@@ -28,8 +28,8 @@
                                     </div>
                                 </div>
                                 <div class=" ml-4" style="width:200px">
-                                    <x-form.select name="status"
-                                    firstOne="all order" :options="['active' => 'Active', 'archive' => 'Archive']" />
+                                    <x-form.select name="order_type"
+                                    firstOne="All order" :options="['normal' => 'Normal', 'custom' => 'Custom']" />
                                 </div>
                                 <div class="ml-4">
                                     <button type="submit" class="btn  btn-primary" style="width:150px">

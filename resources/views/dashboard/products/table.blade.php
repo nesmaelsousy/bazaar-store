@@ -5,7 +5,6 @@
                 <th>ID</th>
                 <th>title</th>
                 <th>Image</th>
-                <th>store</th>
                 <th>category</th>
                 <th>price</th>
                 <th>status</th>
@@ -22,7 +21,7 @@
                 <td><img
                         src="{{ asset($product->image ? 'storage/' . $product->image : 'backend/image/image-placeholder') }}"
                         width="100"></td>
-                <td>{{ $product->store->name }}</td>
+                
                 <td>{{ $product->category->name }}</td>
 
                 <td>{{ $product->price }}</td>
@@ -42,11 +41,11 @@
                 </td>
                 <td class="d-flex g-2 align-items-center justify-content-start">
                     <a href="{{ route('admin.product.edit', $product->id) }}" class="btn"><i
-                            class="fas fa-pencil-alt text-primary"></i> </a>
+                            class="fas fa-pencil-alt text-primary "></i> </a>
                     <form action="{{ route('admin.product.destroy', $product->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button class="bproduct-0 bg-transparent" type="submit"> <i
+                        <button class="bproduct-0 border-0 bg-transparent" type="submit"> <i
                                 class="fas fa-trash-alt text-danger"></i></button>
 
                     </form>

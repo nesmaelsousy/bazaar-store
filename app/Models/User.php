@@ -13,14 +13,15 @@ use Illuminate\Database\Eloquent\Attributes\Guarded;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Order;
-use App\Models\cart;
+use App\Models\Cart;
+use Spatie\Permission\Traits\HasRoles;
 
 // #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
     protected $fillable = [
         'name',
         'slug',
@@ -50,17 +51,29 @@ class User extends Authenticatable
         $path = $image->storeAs($folder, $imageName, 'public');
         return $path;
     }
-    public function store()
+    // public function store()
+    // {
+    //     return $this->hasOne(Store::class);
+    // }
+    public function products()
     {
-        return $this->hasOne(Store::class);
+        return $this->hasMany(Product::class, 'seller_id');
     }
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
-      public function carts()
+    public function sellerOrders()
     {
-        return $this->hasMany(cart::class);
+        return $this->hasMany(Order::class, 'seller_id');
+    }
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+    public function productReviews()
+    {
+        return $this->hasMany(ProductReview::class);
     }
 
     /**
@@ -74,5 +87,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function favorites()
+    {
+        return $this->hasMany(favorite::class);
+    }
+    public function hasRole(string $roleName): bool
+    {
+        return $this->role === $roleName;
     }
 }

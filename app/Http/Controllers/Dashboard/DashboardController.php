@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use App\Models\Admin;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\Store;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 
@@ -20,9 +19,7 @@ class DashboardController extends Controller
         // user 
         $totalCraftsmen = User::where('role', 'craftsmen')->count();
         $totalClient = User::where('role', 'client')->count();
-        //store
-        $totalStore = Store::count();
-        $totalStoreActive = Store::where('status', 'active')->count();
+        
         //product
         $totalProduct = Product::count();
         //order
@@ -33,6 +30,6 @@ class DashboardController extends Controller
         //admin
         $admin = Admin::all();
 
-        return view('dashboard.index', compact('totalStore', 'totalStoreActive', 'totalProduct', 'totalCraftsmen', 'totalClient', 'admin'));
+        return view('dashboard.index', compact( 'totalProduct', 'totalCraftsmen', 'totalClient', 'admin'));
     }
 }

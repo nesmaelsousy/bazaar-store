@@ -15,24 +15,18 @@
 
                         <div class="d-flex gap-2 align-items-center col-12">
 
-                            <div class="">
+                            <div>
                                 <div class="input-group input-group-sm">
                                     {{-- <input type="text" name="table_search" class="form-control float-right"
                                             placeholder="Search"> --}}
                                     <x-form.input name="username" placeholder="Search by username" :oldVal="request('username')"
                                         style="width:500px" />
-                                    <div class="input-group-append">
+                                    <div >
                                         <button type="submit" class="btn btn-default">
                                             <i class="fas fa-search"></i>
                                         </button>
                                     </div>
                                 </div>
-                                {{-- <x-form.input name="name" placeholder="Search by name" :value="request('name')" />
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-default">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div> --}}
                             </div>
 
                             <div class=" ml-4" style="width:200px">

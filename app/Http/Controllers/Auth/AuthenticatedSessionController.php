@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\cart;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -28,10 +30,10 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-        # Merge guest cart into user cart
-        cart::where('cookie_id', cart::getCookieId())->update(['user_id' => auth()->id()]);
+        
 
-        return redirect($request->redirect ?? route('frontend.checkout.index'));
+
+         return redirect()->intended(route('frontend.index'));;
     }
 
     /**

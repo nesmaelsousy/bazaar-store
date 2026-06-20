@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Order;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,11 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
+        $user = auth()->user();
+       $orders = Order::with('orderItems.product')->where('user_id', auth()->id())->latest()->get();
+        return view('profile.client.profile-client', [
             'user' => $request->user(),
+            'orders'=>$orders
         ]);
     }
 
@@ -32,9 +36,22 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
+        if ($request->hasFile('image')) {
+            if (Auth::user()->image) {
+                // Delete old image
+                $oldImagePath = public_path('storage/' . Auth::user()->image);
+                if (file_exists($oldImagePath)) {
+                    // delete the old image file
+                    storage::disk('public')->delete(Auth::user()->image);
+                }
+            }
+            $imagePath = $request->file('image')->store('user', 'public');
+            $request->user()->image = $imagePath;
+        }
+
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('client.profile.edit')->with('status', 'profile-updated');
     }
 
     /**

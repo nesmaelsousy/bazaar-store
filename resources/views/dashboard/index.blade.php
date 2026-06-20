@@ -29,43 +29,6 @@
 
         <!-- ── Row 1: 4 top metric cards ── -->
         <div class="row g-3 mb-3">
-
-            <!-- Total Stores -->
-            <div class="col-xl-3 col-md-6">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:14px;">
-                    <div class="card-body p-3">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div style="width:42px;height:42px;border-radius:10px;background:#EFF6FF;display:flex;align-items:center;justify-content:center;">
-                                <i class="fas fa-store" style="color:#3B82F6;font-size:18px;"></i>
-                            </div>
-                            <span class="badge" style="background:#DCFCE7;color:#166534;font-size:11px;padding:4px 10px;border-radius:20px;">↑ 8%</span>
-                        </div>
-                        <div style="font-size:12px;color:#6B7280;margin-bottom:2px;">Total Stores</div>
-                        <div style="font-size:26px;font-weight:700;color:#111827;line-height:1.2;">{{ number_format($totalStore) }}</div>
-                        <div style="font-size:11px;color:#9CA3AF;margin-top:2px;">Compared to last month</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Active Stores -->
-            <div class="col-xl-3 col-md-6">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:14px;">
-                    <div class="card-body p-3">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div style="width:42px;height:42px;border-radius:10px;background:#ECFDF5;display:flex;align-items:center;justify-content:center;">
-                                <i class="fas fa-check-circle" style="color:#10B981;font-size:18px;"></i>
-                            </div>
-                            <span class="badge" style="background:#DCFCE7;color:#166534;font-size:11px;padding:4px 10px;border-radius:20px;">↑ 5%</span>
-                        </div>
-                        <div style="font-size:12px;color:#6B7280;margin-bottom:2px;">Active Stores</div>
-                        <div style="font-size:26px;font-weight:700;color:#111827;line-height:1.2;">{{ number_format($totalStoreActive) }}</div>
-                        <div style="font-size:11px;color:#9CA3AF;margin-top:2px;">
-                            {{ $totalStore > 0 ? number_format(($totalStoreActive / $totalStore) * 100, 1) : 0 }}% of total stores
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Total Orders -->
             <div class="col-xl-3 col-md-6">
                 <div class="card border-0 shadow-sm h-100" style="border-radius:14px;">
@@ -187,7 +150,7 @@
                 <div class="card border-0 shadow-sm h-100" style="border-radius:14px;">
                     <div class="card-body p-3">
                         <div style="font-size:14px;font-weight:600;color:#111827;margin-bottom:2px;">Plan Distribution</div>
-                        <div style="font-size:11px;color:#9CA3AF;margin-bottom:12px;">Stores per subscription plan</div>
+                      
                         <div class="d-flex flex-wrap gap-2 mb-3" style="font-size:11px;color:#6B7280;">
                             <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#8B5CF6;margin-right:3px;"></span>Free 34%</span>
                             <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#3B82F6;margin-right:3px;"></span>Basic 28%</span>
@@ -280,7 +243,7 @@
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <div>
                                 <div style="font-size:14px;font-weight:600;color:#111827;">Latest Orders</div>
-                                <div style="font-size:11px;color:#9CA3AF;">Most recent transactions across all stores</div>
+                                
                             </div>
                             <a href="#" style="font-size:12px;color:#3B82F6;text-decoration:none;">View all →</a>
                         </div>
@@ -290,7 +253,7 @@
                                 <thead>
                                     <tr style="border-bottom:1px solid #F3F4F6;">
                                         <th style="font-weight:500;color:#6B7280;font-size:11px;text-transform:uppercase;letter-spacing:.04em;border:none;padding:8px 12px;">Order #</th>
-                                        <th style="font-weight:500;color:#6B7280;font-size:11px;text-transform:uppercase;letter-spacing:.04em;border:none;padding:8px 12px;">Store</th>
+                                        
                                         <th style="font-weight:500;color:#6B7280;font-size:11px;text-transform:uppercase;letter-spacing:.04em;border:none;padding:8px 12px;">craftsmen</th>
                                         <th style="font-weight:500;color:#6B7280;font-size:11px;text-transform:uppercase;letter-spacing:.04em;border:none;padding:8px 12px;">Amount</th>
                                         <th style="font-weight:500;color:#6B7280;font-size:11px;text-transform:uppercase;letter-spacing:.04em;border:none;padding:8px 12px;">Date</th>
@@ -300,7 +263,6 @@
                                 <tbody>
                                     <tr>
                                         <td style="padding:10px 12px;color:#111827;font-weight:500;">#ORD-8841</td>
-                                        <td style="padding:10px 12px;color:#374151;">Elegance Store</td>
                                         <td style="padding:10px 12px;color:#374151;">Sarah Johnson</td>
                                         <td style="padding:10px 12px;color:#111827;font-weight:600;">$124.00</td>
                                         <td style="padding:10px 12px;color:#6B7280;">May 30, 2026</td>

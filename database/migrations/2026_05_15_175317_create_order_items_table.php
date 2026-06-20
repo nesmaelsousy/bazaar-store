@@ -17,8 +17,9 @@ return new class extends Migration
             $table->foreignId('product_id')->nullable()->constrained('products')->nullOnDelete();
             $table->string('product_name');
             $table->unsignedSmallInteger('quantity')->default(1);
-            $table->decimal('price', 10, 2);
-            $table->json('options')->nullable();
+            $table->float('price');
+            $table->json('attributes')->nullable();
+            $table->text('engraving')->nullable();
             $table->unique(['order_id', 'product_id']);
             $table->timestamps();
         });

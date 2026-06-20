@@ -3,7 +3,7 @@
 @section('content')
     <main class="min-h-screen max-w-6xl mx-auto pt-28 px-6">
 
-        @if ($cart->getCart()->isNotEmpty())
+        @if ($cart->isNotEmpty())
             <p
                 class="inline-flex items-center gap-2 bg-white text-sm text-[#a05a1c]
         border border-[#e5d3c5] rounded-lg my-6 px-3 py-2">
@@ -15,13 +15,16 @@
         <!-- Cart Container -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            @forelse ($cart->getCart() as $item)
+            @forelse ($cart as $item)
                 <div class="bg-[#FFFDF9] rounded-2xl shadow-xl border border-[#eee] overflow-hidden">
 
                     <!-- Image -->
                     <div class="bg-white overflow-hidden aspect-square">
-                        <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->title }}"
-                            class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                        <a href="{{ route('frontend.product.show', $item->product->id) }}">
+                            <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->title }}"
+                                class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                        </a>
+
                     </div>
 
                     <!-- Content -->
@@ -32,85 +35,100 @@
                         </h3>
 
                         <!-- UPDATE FORM -->
-                        <form action="{{ route('frontend.cart.update', $item->id) }}" method="POST">
+                        <form action="{{ route('frontend.cart.update', $item->id) }}" class="relative" method="POST">
                             @csrf
                             @method('PUT')
 
                             @if ($item->product->is_customizable)
-                                <!-- Color -->
-                                <div class="flex items-center gap-2">
-                                    <span class="text-sm text-[#6B4F3A] font-semibold">
-                                        Color:
-                                    </span>
+                                @foreach ($item->product->attributes ?? [] as $attr)
+                                    @php
+                                        $rawValue = $attr->pivot->value ?? null;
+                                        $values = [];
 
-                                    <select name="color"
-                                        class="w-[110px] px-2 py-1 text-sm border border-[#e5d3c5]
-                                    rounded-lg bg-white text-[#6B4F3A] outline-none">
+                                        if ($rawValue) {
+                                            $decoded = json_decode($rawValue, true);
 
-                                        @foreach ($item->product->colors ?? [] as $color)
-                                            <option value="{{ $color }}"
-                                                {{ $item->color == $color ? 'selected' : '' }}>
-                                                {{ $color }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                            if (is_array($decoded) && isset($decoded['value'])) {
+                                                $values = explode(',', $decoded['value']);
+                                            } else {
+                                                $values = explode(',', $rawValue);
+                                            }
+                                        }
+
+                                        $selected = old('attributes.' . $attr->id, $item->attributes[$attr->id] ?? '');
+                                    @endphp
+                                    <!-- attrbute -->
+                                    <div class="flex items-center gap-2 mb-3">
+
+                                        <span class="text-sm text-[#6B4F3A] font-semibold">
+                                            {{ $attr->name }}:
+                                        </span>
+
+                                        <select name="attributes[{{ $attr->id }}]"
+                                            class="w-full p-2 border-[#e5d3c5] bg-white border rounded-lg">
+
+                                            <option value="">Select {{ $attr->name }}</option>
+
+                                            @foreach ($values as $val)
+                                                <option value="{{ trim($val) }}" @selected($selected == trim($val))>
+                                                    {{ trim($val) }}
+                                                </option>
+                                            @endforeach
+
+                                        </select>
+
+                                    </div>
+                                @endforeach
+
+
+
+
+                                <div class="mb-3">
+                                    <label class="text-sm text-[#6B4F3A] font-semibold">
+                                        Engraving:
+                                    </label>
+                                    <textarea name="engraving" rows="3" id=""
+                                        class="w-full p-2 border border-[#e5d3c5] bg-[#faebe1] rounded-lg">{{ old('engraving', $item->engraving) }}</textarea>
+
                                 </div>
-
-                                <!-- Size -->
-                                <div class="flex items-center gap-2">
-                                    <span class="text-sm text-[#6B4F3A] font-semibold">
-                                        Size:
-                                    </span>
-
-                                    <select name="size"
-                                        class="w-[110px] px-2 py-1 text-sm border border-[#e5d3c5]
-                                    rounded-lg bg-white text-[#6B4F3A] outline-none">
-
-                                        @foreach ($item->product->sizes ?? [] as $size)
-                                            <option value="{{ $size }}"
-                                                {{ $item->size == $size ? 'selected' : '' }}>
-                                                {{ $size }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <!-- Engraving -->
-                                <p
-                                    class="text-sm text-[#7A4E2D] bg-[#f3d6c3]
-                            px-2 py-1 rounded-md inline-block">
-                                    Engraving: {{ $item->engraving ?: 'None' }}
-                                </p>
                             @endif
+                            <div class="flex justify-between items-center">
+                                <!-- Price -->
+                                <p class="text-lg text-[#c26a2d] font-bold">
+                                    ${{ number_format($item->product->price * $item->quantity, 2) }}
+                                </p>
 
-                            <!-- Price -->
-                            <p class="text-lg text-[#c26a2d] font-bold">
-                                ${{ number_format($item->product->price * $item->quantity, 2) }}
-                            </p>
+
+                            </div>
+
 
                             <!-- Quantity + Delete -->
-                            <div class="flex items-center justify-between pt-2">
+                            <div class=" flex items-center justify-between pt-3 relative">
 
                                 <!-- Quantity -->
-                                <div class="flex items-center gap-3 bg-[#f1e4db] px-3 py-2 rounded-lg">
+                                <div class="flex items-center gap-3 bg-[#f1e4db] px-5 py-2 rounded-lg">
 
-                                    <!-- Minus -->
-                                    <button type="submit" name="quantity" value="{{ max(1, $item->quantity - 1) }}"
-                                        class="w-7 h-7 bg-white rounded hover:bg-gray-100">
-                                        -
-                                    </button>
+                                    <button type="button" onclick="decreaseQty(this)"
+                                        class="w-7 h-7 bg-white rounded">-</button>
 
-                                    <span class="font-medium">
-                                        {{ $item->quantity }}
-                                    </span>
+                                    <input type="number" name="quantity" value="{{ $item->quantity }}" min="1"
+                                        class="w-12 text-center border-0 bg-transparent outline-none">
 
-                                    <!-- Plus -->
-                                    <button type="submit" name="quantity" value="{{ $item->quantity + 1 }}"
-                                        class="w-7 h-7 bg-white rounded hover:bg-gray-100">
-                                        +
-                                    </button>
+                                    <button type="button" onclick="increaseQty(this)"
+                                        class="w-7 h-7 bg-white rounded">+</button>
 
                                 </div>
+                                <!-- UPDATE BUTTON -->
+                                <button type="submit"
+                                    class="w-9 h-9 flex items-center justify-center 
+               text-blue-500 rounded-full 
+                transition shadow-md ms-20"
+                                    title="تحديث">
+
+                                    <i class="fa-solid fa-rotate"></i>
+                                </button>
+
+
                         </form>
 
                         <!-- Delete -->
@@ -150,14 +168,14 @@
 
         </div>
 
-        @if ($cart->getCart()->count())
+        @if ($count)
             <div class="flex justify-end my-10">
                 <div class="flex flex-col gap-4 w-fit">
                     <h3 class="text-xl text-[#a05a1c] font-bold">
-                        Total: ${{ number_format($cart->total(), 2) }}
+                        Total: ${{ number_format($total, 2) }}
                     </h3>
 
-                    <a href="{{ route('login', ['redirect' => route('frontend.checkout.index')]) }}"
+                    <a href="{{ route('frontend.checkout.index') }}"
                         class="bg-[#a05a1c] text-white font-medium px-6 py-3 rounded-lg
                     transition hover:bg-[#c27a3f] text-center">
                         Proceed To Checkout
@@ -168,3 +186,18 @@
 
     </main>
 @endsection
+@push('scripts')
+    <script>
+        function increaseQty(btn) {
+            let input = btn.parentElement.querySelector('input');
+            input.value = parseInt(input.value) + 1;
+        }
+
+        function decreaseQty(btn) {
+            let input = btn.parentElement.querySelector('input');
+            if (input.value > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+    </script>
+@endpush

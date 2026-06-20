@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderAddress extends Model
 {
-    //
+    protected $fillable = [
+        'order_id','fullname','phone','email','street','city','country',
+        'BuildNum','district','apartment','floor'
+        ];
+        
 }

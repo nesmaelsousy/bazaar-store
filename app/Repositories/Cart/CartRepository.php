@@ -1,7 +1,7 @@
 <?php 
 namespace App\Repositories\Cart;
 
-use App\Models\cart;
+use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Support\Collection;
 
@@ -14,4 +14,5 @@ interface CartRepository
     public function deleteCart($id);
     public function clearCart();
     public function total():float;
+    public function count();
 }

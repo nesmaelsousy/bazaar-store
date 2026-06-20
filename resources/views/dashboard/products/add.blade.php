@@ -1,11 +1,7 @@
 @extends('dashboard.app')
-
-
-
 @section('content')
     <div class="content-wrapper">
         <div class="p-5">
-
             {{-- Header --}}
             <div class="d-flex align-items-center gap-3 mb-1">
                 <div class="page-icon mr-3">
@@ -18,18 +14,18 @@
             </div>
 
             <hr class="form-divider">
+              {{-- Errors --}}
             @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
+                <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4">
+                    <ul class="list-disc pl-5 text-sm text-red-600 space-y-1">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
             @endif
-
             {{-- Form --}}
-            <form action="{{ route('admin.product.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.product.index') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @include('dashboard.products._form')
             </form>
@@ -38,24 +34,5 @@
 @endsection
 
 @push('js')
-    <script>
-        // Toggle buttons
-        function pick(el, group, value) {
-            const parent = el.closest('.toggle-group');
-            parent.querySelectorAll('.toggle-btn').forEach(b => {
-                b.classList.remove('active-green', 'active-danger', 'active-brown');
-            });
-
-            if (group === 'status') {
-                el.classList.add(value === 'active' ? 'active-green' : 'active-danger');
-                document.getElementById('statusVal').value = value;
-            } else if (group === 'is_customizable') {
-                el.classList.add(value == 1 ? 'active-green' : 'active-danger');
-                document.getElementById('is_customizableVal').value = value;
-            } else {
-                el.classList.add('active-brown');
-                document.getElementById('roleVal').value = value;
-            }
-        }
-    </script>
+   <script src="{{ asset('frontend/js/status.js') }}"></script>
 @endpush

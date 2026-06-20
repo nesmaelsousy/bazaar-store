@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Cart;
 
-use App\Models\cart;
+use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -21,52 +21,98 @@ class CartModelRepository implements CartRepository
     }
     public function getCart(): Collection
     {
-        if ($this->items->isEmpty()) {
-            $this->items = cart::with('product')->get();
-        }
-        return $this->items;
+        return Cart::forCurrentUser()
+            ->with('product')
+            ->get();
     }
-    public function addToCart(Product $product, $quantity = 1)
+    // add to cart or increment if exists 
+    public function addToCart(Product $product, $quantity = 1, $attributes = [], $engraving = null): Cart
     {
-        $cartItem = cart::where('product_id', $product->id)->first();
+        $cartItem = Cart::forCurrentUser()
+            ->where('product_id', $product->id)
+            ->where('attributes', json_encode($attributes))
+            ->where('engraving', $engraving)
+            ->first();
+        $currentQty = $cartItem ? $cartItem->quantity : 0;
+        if ($currentQty + $quantity > $product->stock_quantity) {
+            throw new \Exception('Cannot add more than available stock. Remaining: ' .
+                ($product->stock_quantity - $currentQty));
+        }
+        // لو ما فيش عنصر في الكارت بنفس المنتج نضيفه، لو موجود نزيد الكمية
         if (!$cartItem) {
-            $cartItem = cart::create([
-                'cookie_id' => cart::getCookieId(),
+            // Create new cart item
+            $cartItem = Cart::create([
+                'cookie_id' => Auth::check() ? null : Cart::getCookieId(),
+                'user_id' => Auth::id(),
                 'product_id' => $product->id,
+                'attributes' => $attributes,
+                'engraving' => $engraving,
                 'quantity' => $quantity
             ]);
-            $this->items->push($cartItem);
-            return $cartItem;
+        } else {
+            // Increment existing item
+            $cartItem->increment('quantity', $quantity);
+            $cartItem->refresh();
         }
-        // dd($cartItem);
-        $cartItem->increment('quantity', $quantity);
+
         return $cartItem;
     }
 
-    public function updateCart($id, $quantity = 1)
+    public function updateCart($id, $quantity = 1, $attributes = [], $engraving = null)
     {
-        return  cart::where('id', $id)
-            ->update(
-                [
-                    'quantity' => max(1, $quantity),
-                ]
-            );
+        DB::beginTransaction();
+        try {
+            $quantity = max(1, (int) $quantity);
+            // 1 عشان ما ينزلش عن max نستخدم   
+            $cartItem = Cart::forCurrentUser()
+                ->where('id', $id)
+                ->first();
+            $product = $cartItem->product;
+            if ($quantity > $product->stock_quantity) {
+                throw new \Exception(
+                    "Cannot add more than available stock. Remaining: {$product->stock_quantity}"
+                );
+            }
+            $updateData = ['quantity' => $quantity];
+            if (!empty($attributes)) {
+                $updateData['attributes'] = $attributes;
+            }
+            if ($engraving !== null) {
+                $updateData['engraving'] = $engraving;
+            }
+            $cartItem->update($updateData);
+            $cartItem->refresh();
+            DB::commit();
+            return $cartItem;
+        } catch (\Exception $e) {
+            DB::rollBack();
+         
+             throw $e;
+        }
     }
     public function deleteCart($id)
     {
-        return cart::where('id', $id)->delete();
+        return Cart::forCurrentUser()
+            ->where('id', $id)
+            ->delete();
     }
     public function clearCart()
     {
-        cart::delete();
+        return Cart::forCurrentUser()->delete();
     }
 
     public function total(): float
     {
-        // return (float) cart::join('products', 'products.id', '=', 'carts.product_id')
-        //     ->sum(DB::raw('products.price * carts.quantity'));
-        return $this->getCart()->sum(function ($item) {
-            return $item->product->price * $item->quantity;
-        });
+        return (float) Cart::forCurrentUser()
+            ->join('products', 'products.id', '=', 'carts.product_id')
+            ->sum(DB::raw('products.price * carts.quantity'));
+    }
+    /**
+     * Get count of items in cart
+     */
+    public function count(): int
+    {
+        return Cart::forCurrentUser()
+            ->sum('quantity');
     }
 }

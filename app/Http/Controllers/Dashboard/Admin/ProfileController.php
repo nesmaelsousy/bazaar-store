@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Dashboard\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -15,7 +15,7 @@ class ProfileController extends Controller
     public function index() {
        // $admin = Auth::user();
        //حاليا هخليه كدا وبس اعمل تسجيل الدخول هتم حذفه احط اللي فوق 
-       $admin = user::where('role','admin')->get();
+       $admin = Admin::first();
         return view('dashboard.admin.profile' , compact('admin'));
     }
 

@@ -7,7 +7,7 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row m-2 align-items-center justify-content-between">
-                <div class="">
+                <div>
                     <h1>category Table </h1>
                 </div>
                 <div class="d-flex justify-content-center align-items-center">
@@ -19,7 +19,7 @@
                                 <div class="input-group input-group-sm">
                                     <x-form.input name="name" placeholder="Search by name" :oldVal="request('name')"
                                         style="width:500px" />
-                                    <div class="input-group-append">
+                                    <div>
                                         <button type="submit" class="btn btn-default">
                                             <i class="fas fa-search"></i>
                                         </button>

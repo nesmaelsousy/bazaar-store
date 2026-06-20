@@ -258,7 +258,7 @@
             @endif
 
             {{-- Form --}}
-            <form action="{{ route('dashboard.order.update',$order->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.order.update',$order->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 @include('dashboard.orders._form',['order' => $order])

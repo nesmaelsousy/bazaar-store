@@ -15,12 +15,12 @@
 
                             <div class="d-flex gap-2 align-items-center col-12">
 
-                                <div class="">
+                                <div>
                                     <div class="input-group input-group-sm">
                                        
-                                        <x-form.input name="name" placeholder="Search by name" :oldVal="request('name')"
+                                        <x-form.input name="title" placeholder="Search by name product" :oldVal="request('title')"
                                             style="width:500px" />
-                                        <div class="input-group-append">
+                                        <div  >
                                             <button type="submit" class="btn btn-default">
                                                 <i class="fas fa-search"></i>
                                             </button>

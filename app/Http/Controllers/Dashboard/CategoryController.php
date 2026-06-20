@@ -98,7 +98,7 @@ class CategoryController extends Controller
             Storage::disk('public')->delete($old_image);
         }
 
-        return redirect()->route('admin.category.index')->with('warning', 'The category has been updated');
+        return redirect()->route('admin.category.index');
     }
 
     /**

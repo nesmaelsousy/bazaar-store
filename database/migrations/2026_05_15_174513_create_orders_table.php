@@ -13,16 +13,17 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('store_id')->constrained('stores')->onDelete('cascade');
-            $table->string('order_number')->unique();
-            $table->enum('status',['pending','processing','shipped','delivered','cancelled','refunded'])->default('pending');
-            $table->enum('order_type',['normal','custom'])->default('normal');
-            $table->decimal('total_price', 10, 2)->default(0);
-            $table->enum('payment_status',['pending','completed','failed'])->default('pending');
-          $table->string('payment_method')->default('stripe');
+            $table->foreignId('seller_id')->constrained('users')
+                ->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')
+                ->nullOnDelete();
+            $table->string('number')->unique();
+            $table->enum('status', ['pending', 'processing', 'completed', 'shipped', 'cancelled'])->default('pending');
+            $table->enum('order_type', ['normal', 'custom'])->default('normal');
+            $table->decimal('total_price', 10, 2);
+            $table->enum('payment_status', ['pending', 'completed', 'failed'])->default('pending');
+            $table->string('payment_method')->default('stripe');
             $table->timestamps();
-
         });
     }
 
