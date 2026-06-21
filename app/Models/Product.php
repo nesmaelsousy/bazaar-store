@@ -102,4 +102,8 @@ class Product extends Model
     {
         return $this->hasMany(OrderItem::class, 'order_id');
     }
+       public function getRatingAttribute()
+    {
+        return round($this->reviews->avg('rating'));
+    }
 }

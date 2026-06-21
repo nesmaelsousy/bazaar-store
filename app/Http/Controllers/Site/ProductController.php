@@ -121,8 +121,8 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $product->load('attributes');
-        $rating = round($product->reviews->avg('rating'));
-        return view('frontend.products.product-details', compact('product', 'rating'));
+        // $rating = $product->rating;
+        return view('frontend.products.product-details', compact('product'));
     }
     // add to favorites
     public function addToFavorites(Request $request, Product $product)

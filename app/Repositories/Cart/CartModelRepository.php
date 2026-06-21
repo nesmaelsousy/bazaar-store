@@ -28,34 +28,55 @@ class CartModelRepository implements CartRepository
     // add to cart or increment if exists 
     public function addToCart(Product $product, $quantity = 1, $attributes = [], $engraving = null): Cart
     {
-        $cartItem = Cart::forCurrentUser()
-            ->where('product_id', $product->id)
-            ->where('attributes', json_encode($attributes))
-            ->where('engraving', $engraving)
-            ->first();
-        $currentQty = $cartItem ? $cartItem->quantity : 0;
-        if ($currentQty + $quantity > $product->stock_quantity) {
-            throw new \Exception('Cannot add more than available stock. Remaining: ' .
-                ($product->stock_quantity - $currentQty));
-        }
-        // لو ما فيش عنصر في الكارت بنفس المنتج نضيفه، لو موجود نزيد الكمية
-        if (!$cartItem) {
-            // Create new cart item
-            $cartItem = Cart::create([
-                'cookie_id' => Auth::check() ? null : Cart::getCookieId(),
-                'user_id' => Auth::id(),
-                'product_id' => $product->id,
-                'attributes' => $attributes,
-                'engraving' => $engraving,
-                'quantity' => $quantity
-            ]);
-        } else {
-            // Increment existing item
-            $cartItem->increment('quantity', $quantity);
-            $cartItem->refresh();
-        }
+        DB::beginTransaction();
 
-        return $cartItem;
+        try {
+            $quantity = max(1, (int) $quantity);
+
+            // نحسب مفتاح ثابت للـ attributes
+            $attributesHash = md5(json_encode($attributes));
+
+            // نجيب كل نفس المنتج بالكارت ونفلتر بالـ hash
+            $cartItem = Cart::forCurrentUser()
+                ->where('product_id', $product->id)
+                ->get()
+                ->first(function ($item) use ($attributesHash, $engraving) {
+                    return md5(json_encode($item->attributes)) === $attributesHash
+                        && $item->engraving === $engraving;
+                });
+
+            $currentQty = $cartItem ? $cartItem->quantity : 0;
+
+            // check stock
+            if ($currentQty + $quantity > $product->stock_quantity) {
+                throw new \Exception(
+                    "Cannot add more than available stock. Remaining: " .
+                        ($product->stock_quantity - $currentQty)
+                );
+            }
+
+            // إذا موجود → update quantity
+            if ($cartItem) {
+                $cartItem->increment('quantity', $quantity);
+                $cartItem->refresh();
+            } else {
+                // إنشاء عنصر جديد
+                $cartItem = Cart::create([
+                    'cookie_id' => Auth::check() ? null : Cart::getCookieId(),
+                    'user_id' => Auth::id(),
+                    'product_id' => $product->id,
+                    'attributes' => $attributes,
+                    'engraving' => $engraving,
+                    'quantity' => $quantity,
+                ]);
+            }
+
+            DB::commit();
+            return $cartItem;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     public function updateCart($id, $quantity = 1, $attributes = [], $engraving = null)
@@ -86,8 +107,8 @@ class CartModelRepository implements CartRepository
             return $cartItem;
         } catch (\Exception $e) {
             DB::rollBack();
-         
-             throw $e;
+
+            throw $e;
         }
     }
     public function deleteCart($id)

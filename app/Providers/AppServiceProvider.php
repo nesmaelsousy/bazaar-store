@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use App\Models\cart;
+use App\Models\Contact;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,11 +24,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-    View::composer('*', function ($view) {
-        $cart = app()->make('App\Repositories\Cart\CartRepository');
-        $count = $cart->count();
-        $view->with('count', $count);
-    });
+        View::composer('*', function ($view) {
+            $cart = app()->make('App\Repositories\Cart\CartRepository');
+            $count = $cart->count();
+
+            // Messages (new)
+            $latestMessages = Contact::latest()->take(5)->get();
+            $unreadCount = Contact::where('is_read', false)->count();
+            $view->with([
+                'count' => $count,
+                'latestMessages' => $latestMessages,
+                'unreadCount' => $unreadCount
+            ]);
+        });
         Paginator::useBootstrap();
     }
 }

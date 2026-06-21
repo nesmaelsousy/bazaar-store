@@ -31,10 +31,11 @@
                             <div class="flex flex-col items-center">
                                 <div class="relative">
                                     <div
-                                        class="w-28 h-28 bg-[#F7EEE9] flex justify-center items-center rounded-full shadow-md border-4 border-[#F4E7DD] overflow-hidden">
+                                        class="w-40 h-40 bg-[#F7EEE9] flex justify-center items-center rounded-full shadow-md border-4 border-[#F4E7DD] overflow-hidden">
                                         @if (Auth::user()->image)
                                             {{-- {{ dd(Auth::user()->image) }} --}}
-                                            <img src="{{ asset('storage/' . Auth::user()->image) }}" class="w-full h-full ">
+                                            <img src="{{ asset('storage/' . Auth::user()->image) }}"
+                                                class="w-full h-full object-cover ">
                                         @else
                                             <i class="fa-solid fa-user text-5xl text-[#9B6B4A]"></i>
                                         @endif
@@ -72,7 +73,7 @@
                                     class="group hover:bg-[#F9F5F1] transition-all duration-200 border-b border-[#F4E7DD] p-3 rounded-lg">
                                     <p class="text-xs text-[#9B6B4A] font-semibold tracking-wider uppercase">Email</p>
                                     <h3 class="text-[#835837] font-medium mt-1">{{ Auth::user()->email }}</h3>
-                                 
+
                                 </div>
                                 <div
                                     class="group hover:bg-[#F9F5F1] transition-all duration-200 border-b border-[#F4E7DD] p-3 rounded-lg">

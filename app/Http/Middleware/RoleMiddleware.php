@@ -19,7 +19,7 @@ class RoleMiddleware
             return redirect()->route('login');
         }
         if(auth()->user()->role !== $role){
-            abort(403);
+            abort(403, 'You are not allowed to access this page.');
         }
         return $next($request);
     }

@@ -15,6 +15,7 @@ class HomeController extends Controller
         $products = Product::where('status', 'active')->paginate(8);
         $users = User::where('role', 'craftsmen')->paginate(4);
         $workshops = Workshop::where('status', 'active')->get();
+        
 
 
         return view('frontend.index', compact('products', 'users', 'workshops'));
@@ -28,10 +29,7 @@ class HomeController extends Controller
         $artisans = User::where('role', 'craftsmen')->with('products')->get();
         return view('frontend.craftsmen.artisans', compact('artisans'));
     }
-    function contact()
-    {
-        return view('frontend.contact');
-    }
+   
     function workshops()
     {
         $workshops = Workshop::where('status', 'active')->get();

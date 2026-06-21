@@ -9,14 +9,8 @@
     <div class="sidebar">
 
         <!-- User Panel -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="image">
-                <img src="{{ asset('backend/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
-                    alt="User Image">
-            </div>
-            <div class="info">
-                <a href="{{ route('admin.profile.index') }}" class="d-block">Admin</a>
-            </div>
+        <div class="user-panel mt-3 pb-3 mb-3 text-center">
+           <h5 class="text-white " >Bazaar Store</h5>
         </div>
 
 
@@ -211,44 +205,8 @@
                     </ul>
                 </li>
 
-                <!-- Coupons -->
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-ticket-alt"></i>
-                        <p>Coupons</p>
-                    </a>
-                </li>
 
-
-
-                <!-- Statistics -->
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chart-pie"></i>
-                        <p>Statistics <i class="right fas fa-angle-left"></i></p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Total Users</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Total Clients</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Growth Overview</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
+                
                 <!-- Settings -->
                 <li class="nav-item">
                     <a href="#" class="nav-link">

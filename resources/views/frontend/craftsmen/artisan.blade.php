@@ -47,15 +47,7 @@
             </div>
         </div>
 
-        <!-- Right: Message Button -->
-        <div class="ml-auto">
-            <a href="{{ route('client.chat.show',$artisan->id) }}"
-               class="flex items-center gap-2 px-4 py-2 rounded-full border border-[#835837] text-[#835837] hover:bg-[#835837] hover:text-white transition">
-
-                <i class="fa-solid fa-message"></i>
-                <span>Message</span>
-
-            </a>
+     
         </div>
 
     </div>
@@ -96,9 +88,8 @@
 
 
             <!-- Reviews -->
-            {{-- @foreach ( as )
-                
-            @endforeach --}}
+           {{-- @if --}}
+
                 <div>
                     <h2 class="text-xl font-bold text-[#835837] mb-4">Customer Reviews</h2>
 

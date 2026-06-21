@@ -10,6 +10,7 @@ use App\Http\Controllers\Site\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArtisanDashboardController;
 use App\Http\Controllers\ArtisanOrderController;
+use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\OrderController;
 use App\Http\Controllers\Site\ReviewController;
 use App\Http\Controllers\Site\StripeController;
@@ -17,11 +18,13 @@ use App\Http\Controllers\Site\StripeController;
 Route::name('frontend.')->group(function () {
     // Route::resource('profile', ProfileController::class);
 
-    Route::get('/home', [HomeController::class, 'index'])->name('index');
+    Route::get('/', [HomeController::class, 'index'])->name('index');
     Route::get('/about', [HomeController::class, 'about'])->name('about');
     Route::get('/artisans', [HomeController::class, 'artisans'])->name('artisans');
     Route::get('/artisan/{artisan}', [ArtisanDashboardController::class, 'show'])->name('artisan.show');
-    Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+    Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+    Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
+
     Route::get('/workshops', [HomeController::class, 'workshops'])->name('workshops');
     Route::name('favorites.')->group(function () {
         Route::get('/favorites', [HomeController::class, 'favorites'])->name('index');

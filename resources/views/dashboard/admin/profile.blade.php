@@ -2,145 +2,160 @@
 
 @section('content')
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <div class="container-fluid w-75">
-                <form action="" method="POST" enctype="multipart/form-data">
+        <div class="container-fluid py-4">
+            <div class="container">
+
+                <form action="{{ route('admin.profile.update', $admin->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
+
                     <div class="card">
-                        <div class="header-card text-center py-4">
-                            <div class="image mb-3">
-                                <div class="text-center">
-                                    <div class="position-relative d-inline-block">
-                                        <label for="avatar" class="cursor-pointer">
-                                            <img name="avatar" style="object-fit:cover;"
-                                                src="{{ asset(optional($admin->image) ? 'storage/' . $admin->image : 'backend/image/logo.png') }}"
-                                                class="rounded-circle border border-3 border-white shadow" width="120"
-                                                height="120" alt="صورة البروفايل">
-                                        </label>
 
-                                        <!-- أيقونة الحذف - موقع ثابت بالنسبة للصورة -->
-                                        <div id="DeleteImage" class="position-absolute" data-bs-toggle="modal"
-                                            data-bs-target="#deleteAvatarModal"
-                                            style="top: 5px; right: 5px; width: 26px; height: 26px;">
-                                            <div class="bg-white text-danger rounded-circle shadow-sm d-flex align-items-center justify-content-center w-100 h-100"
-                                                style="cursor: pointer; border: 1px solid #fdfeff;">
-                                                <i class="bi bi-trash3" style="font-size: 12px;"></i>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <div class="card-body text-center">
 
-                                    <div class="mt-2">
-                                        <small class="text-muted">انقر على الصورة لتغييرها</small>
+                            {{-- IMAGE --}}
+                            <div class="position-relative d-inline-block show-img">
+
+                                <img id="previewImage"
+                                    style="
+                            width:120px;
+                            height:120px;
+                            object-fit:cover;
+                            border-radius:50%;
+                            border:3px solid #F0E8E0;
+                            box-shadow:0 4px 12px rgba(92,61,46,0.15);
+                        "
+                                    src="{{ asset($admin->image ? 'storage/' . $admin->image : 'backend/image/avatar.jpg') }}"
+                                    alt="profile">
+
+                                {{-- delete icon --}}
+                                <div id="DeleteImage"
+                                    style="
+                            position:absolute;
+                            top:5px;
+                            right:5px;
+                            width:26px;
+                            height:26px;
+                            cursor:pointer;
+                        ">
+                                    <div
+                                        class="bg-white text-danger rounded-circle d-flex align-items-center justify-content-center w-100 h-100">
+                                        <i class="fas fa-trash" style="font-size:12px;"></i>
                                     </div>
                                 </div>
 
-                                <div class="d-none">
-                                    <x-form.input type='file' accept=".jpg,.png,.svg,.jpeg" name="avatar"
-                                        :oldimage="$admin->image" />
-                                </div>
-
-
                             </div>
-                            <div class="Name">
-                                <h4 class="mb-0">{{ $admin->name }}</h4>
+
+                            <div class="mt-2">
+                                <small class="text-muted">Click the image to change it</small>
+                                <br>
+                                <small class="text-muted">200 × 200 px</small>
                             </div>
+
+                            {{-- hidden input --}}
+                            <input type="file" id="image-input" name="image" class="d-none">
+
+                            <h4 class="mt-3">{{ $admin->name }}</h4>
+
                         </div>
 
-                        <hr style="color: #cdcdcd">
+                        <hr>
+
                         <div class="card-body">
-                            <div class="mb-3">
-                                <x-form.input label="الاسم بالكامل " name="name" type="text" :oldVal="old('name', $admin->name)" />
-
-                            </div>
 
                             <div class="mb-3">
-                                <x-form.input label="البريد الإلكتروني" name="email" type="email" :oldVal="old('email', $admin->email)"
-                                    disable='true' disabled />
-
+                                <x-form.input label="Full Name" name="name" type="text" :oldVal="old('name', $admin->name)" />
                             </div>
 
-                            <!-- رقم الجوال -->
-                            <x-form.input label="رقم الجوال" name="phone" :oldVal="old('phone', $admin->phone)" />
-
-                            <!-- كلمة المرور -->
-                            <x-form.input label="كلمة المرور" name="password" type="password" value="password" />
-
-                            <!-- تأكيد كلمة المرور -->
-                            <x-form.input label="تأكيد كلمة المرور" name="password_confirmation" type="password"
-                                value="password" />
-
-
-                            <div class="mt-4">
-                                <button type="submit" class="btn btn-primary w-100">
-                                    حفظ التغيرات
-                                </button>
+                            <div class="mb-3">
+                                <x-form.input label="Email" name="email" type="email" :oldVal="old('email', $admin->email)" disabled />
                             </div>
+
+                            <div class="mb-3">
+                                <x-form.input label="Phone" name="phone" :oldVal="old('phone', $admin->phone)" />
+                            </div>
+
+                            <div class="mb-3">
+                                <x-form.input label="Password" name="password" type="password" />
+                            </div>
+
+                            <div class="mb-3">
+                                <x-form.input label="Confirm Password" name="password_confirmation" type="password" />
+                            </div>
+
+                            <button class="btn btn-primary w-100">
+                                Save Changes
+                            </button>
+
                         </div>
+
                     </div>
+
                 </form>
+
             </div>
-        </section>
+        </div>
     </div>
-
-
 @endsection
 
 @push('js')
     <script>
-        $(document).ready(function() {
-            $('#avatar').on('change', function() {
-                let file = this.files[0];
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    $('.img-avatar').attr('src', e.target.result);
-                };
-                reader.readAsDataURL(file);
+        document.addEventListener('DOMContentLoaded', function() {
 
-            });
-        });
+            const wrapper = document.querySelector('.show-img');
+            const input = document.getElementById('image-input');
+            const img = document.getElementById('previewImage');
+            const del = document.getElementById('DeleteImage');
 
-
-        let del_img = document.querySelector('#DeleteImage');
-
-        del_img.onclick = () => {
-            let avatar = document.querySelector('img[name="avatar"]');
-            if (avatar.src.includes('backend/image/logo.png')) {
-                Swal.fire("لا يوجد صورة لحذفها!");
-                return; // توقف عن تنفيذ الكود
+            // open file picker
+            if (wrapper && input) {
+                wrapper.addEventListener('click', function(e) {
+                    if (!e.target.closest('#DeleteImage')) {
+                        input.click();
+                    }
+                });
             }
 
-            Swal.fire({
-                title: "هل انت متأكد ؟",
-                text: "لن تتمكن من التراجع عن هذا !",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "نعم احذفها !"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.get('/admin/deleteImage')
-                        .done((res) => {
-                            document.querySelector('img[name="avatar"]')
-                                .src =
-                                "{{ asset('admin_assets_rtl/images/avatars/avatar-removebg-preview.png') }}";
-                            Swal.fire({
-                                title: "حذفت!",
-                                text: "تم الحذف بنجاح .",
-                                icon: "success"
-                            });
-                        })
-                        .fail((err) => {
-                            alert(err.responseText);
-                        });
+            // preview image
+            if (input && img) {
+                input.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (!file) return;
 
-                }
-            });
-        }
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // delete image
+            if (del && img) {
+                del.addEventListener('click', function(e) {
+                    e.stopPropagation();
+
+                    if (!confirm("Delete image?")) return;
+
+                    fetch('/admin/deleteImage', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .content,
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                img.src = "/backend/image/avatar.jpg";
+                                alert("Deleted successfully");
+                            }
+                        })
+                        .catch(() => alert("Error deleting image"));
+                });
+            }
+
+        });
     </script>
 @endpush
-
-
-

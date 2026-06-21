@@ -35,12 +35,13 @@
                 </div>
                 <div class="bg-[#F7EEE9] rounded-2xl shadow-2xl p-8">
                     <h2 class="text-2xl font-bold text-[#835837] mb-5">Send Message</h2>
-                    <form id="contactForm" class="space-y-4">
-                        <input id="name" type="text" placeholder="Your Name"
+                    <form id="contactForm" class="space-y-4" action="{{ route('frontend.contact.send') }}" method="POST">
+                        @csrf
+                        <input id="name" name="fullname" type="text" placeholder="Your Name"
                             class="w-full px-3 py-2 rounded-md outline-none border border-[#e5d3c5] focus:ring-2 focus:ring-[#c8a98d]">
-                        <input id="email" type="email" placeholder="Your Email"
+                        <input id="email" type="email" name="email" placeholder="Your Email"
                             class="w-full px-3 py-2 rounded-md outline-none border border-[#e5d3c5] focus:ring-2 focus:ring-[#c8a98d]">
-                        <textarea id="messageInput" rows="4" placeholder="Your Message"
+                        <textarea id="messageInput" name="message" rows="4" placeholder="Your Message"
                             class="w-full px-3 py-2 rounded-md outline-none border border-[#e5d3c5] focus:ring-2 focus:ring-[#c8a98d]"></textarea>
                         <button type="submit"
                             class="w-full bg-[#a05a1c] text-white px-4 py-2 rounded-md hover:bg-[#6b3a12] transition">Send
@@ -54,5 +55,5 @@
 @endsection
 @push('scripts')
  <script type="module" src="{{ asset('frontend/js/script.js') }}"></script>
-<script type="module" src="{{ asset('frontend/js/contact.js') }}"></script>   
+{{-- <script type="module" src="{{ asset('frontend/js/contact.js') }}"></script>    --}}
 @endpush

@@ -26,6 +26,7 @@ class StripeController extends Controller
             'amount' => $amount,
             'currency' => 'usd',
             'automatic_payment_methods' => ['enabled' => true],
+            
         ]);
         $payment = new Payment();
         $payment->forceFill([

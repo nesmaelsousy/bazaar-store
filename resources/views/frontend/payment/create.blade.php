@@ -80,13 +80,17 @@
 
     <script>
         // This is your test publishable API key.
-        const stripe = Stripe("{{ config('services.stripe.publishable_key') }}");
-
+        const stripe = Stripe("{{ config('services.stripe.publishable_key') }}", {
+            locale: "en"
+        });
         // The items the customer wants to buy
         // const items = [{
         //     id: "xl-tshirt",
         //     amount: 1000
         // }];
+        // const stripe = Stripe("pk_test_xxx", {
+        //     locale: "en"
+        // });
 
         let elements;
 
@@ -97,31 +101,31 @@
             .addEventListener("submit", handleSubmit);
 
         // Fetches a payment intent and captures the client secret
-       async function initialize() {
+        async function initialize() {
 
-    const response = await fetch("{{ route('frontend.stripe.paymentIntent.create', $order->id) }}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": "{{ csrf_token() }}",
-            "Accept": "application/json"
+            const response = await fetch("{{ route('frontend.stripe.paymentIntent.create', $order->id) }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json"
+                }
+            });
+
+            const text = await response.text();
+            console.log("RAW RESPONSE:", text);
+
+            const data = JSON.parse(text);
+
+            const clientSecret = data.clientSecret;
+
+            elements = stripe.elements({
+                clientSecret
+            });
+
+            const paymentElement = elements.create("payment");
+            paymentElement.mount("#payment-element");
         }
-    });
-
-    const text = await response.text();
-    console.log("RAW RESPONSE:", text);
-
-    const data = JSON.parse(text);
-
-    const clientSecret = data.clientSecret;
-
-    elements = stripe.elements({
-        clientSecret
-    });
-
-    const paymentElement = elements.create("payment");
-    paymentElement.mount("#payment-element");
-}
         async function handleSubmit(e) {
             e.preventDefault();
             setLoading(true);

@@ -65,14 +65,7 @@
 
 
                         @auth
-                            <a href="#"
-                                class="relative text-xl text-[#875E43] hover:text-[#E6B693] transition duration-300 group ">
-                                <i class="fa-solid fa-envelope"></i>
-                                <span id="message-count"
-                                    class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex justify-center items-center rounded-full transition-all duration-300 group-hover:-translate-y-1">
-                                    1
-                                </span>
-                            </a>
+                           
 
                             <div class="relative group">
                                 <button id="userMenuBtn"

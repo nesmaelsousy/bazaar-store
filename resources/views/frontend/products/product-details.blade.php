@@ -34,7 +34,7 @@
 
                 <div class="flex text-yellow-400  text-xl">
                     @for ($i = 1; $i <= 5; $i++)
-                        @if ($i <= $rating)
+                        @if ($i <= $product->rating)
                             <i class="fa fa-star"></i>
                         @else
                             <i class="fa-regular fa-star"></i>
@@ -43,7 +43,7 @@
                 </div>
                 <div class="flex items-center gap-1 mb-4">
                   
-                    <span class="text-md text-[#835837] font-semibold">rating: {{ round($product->reviews->avg('rating'), 1) }}</span>
+                    <span class="text-md text-[#835837] font-semibold">rating: {{ round($product->rating, 1) }}</span>
                 </div>
 
                 <p class="text-[#9B6B4A] leading-relaxed mb-4">
