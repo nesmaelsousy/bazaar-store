@@ -61,7 +61,8 @@
             </div>
 
             <!-- Dashboard Tabs -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <!-- Dashboard Tabs -->
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                 <button data-tab="products"
                     class="dashboard-tab bg-white p-5 text-left rounded-2xl shadow-md transition hover:bg-[#F4E7DD] active-tab">
                     <div class="flex items-center justify-between">
@@ -77,20 +78,9 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-[#9B6B4A] font-semibold">Orders</p>
-                            <p class="text-[#835837] text-2xl font-bold">
-                                {{ $user->sellerOrders->count() }}</p>
+                            <p class="text-[#835837] text-2xl font-bold">{{ $user->sellerOrders->count() }}</p>
                         </div>
                         <i class="fa-solid fa-truck text-3xl text-[#9B6B4A] opacity-50"></i>
-                    </div>
-                </button>
-                <button data-tab="messages"
-                    class="dashboard-tab bg-white p-5 text-left rounded-2xl shadow-md transition hover:bg-[#F4E7DD]">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-[#9B6B4A] font-semibold">Messages</p>
-                            <p class="text-[#835837] text-2xl font-bold">23</p>
-                        </div>
-                        <i class="fa-solid fa-envelope text-3xl text-[#9B6B4A] opacity-50"></i>
                     </div>
                 </button>
                 <button data-tab="analytics"
@@ -110,101 +100,6 @@
 
             <!-- Orders Section -->
             @include('profile.craftsmen.order')
-
-
-            <!-- Messages Section -->
-            <section id="messagesSection" class="dashboard-section hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl text-[#835837] font-bold">Messages</h2>
-                    <div class="flex gap-2">
-                        <button id="markAllRead"
-                            class="text-[#9B6B4A] hover:text-[#835837] transition text-sm px-3 py-1 rounded-lg">
-                            <i class="fa-regular fa-circle-check mr-1"></i>Mark all read
-                        </button>
-                    </div>
-                </div>
-                <div id="messagesContainer" class="space-y-4">
-                    <div
-                        class="message-card bg-[#FFF8F0] rounded-2xl shadow-md p-5 hover:shadow-lg transition border-l-4 border-[#835837]">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2">
-                                    <h3 class="font-bold text-[#835837] text-lg">Sarah Johnson</h3>
-                                    <span class="px-2 py-0.5 bg-red-100 text-red-600 rounded-full text-xs">New</span>
-                                </div>
-                                <p class="text-sm text-[#9B6B4A]">sarah.j@email.com</p>
-                            </div>
-                            <span class="text-xs text-gray-500">2 hours ago</span>
-                        </div>
-                        <p class="mt-3 text-gray-700">Hi! I love your ceramic vase collection. Do you offer custom colors?
-                        </p>
-                        <div class="mt-3 flex gap-2">
-                            <button
-                                class="reply-msg bg-[#835837] text-white px-4 py-1 rounded-lg text-sm hover:bg-[#9B6B4A] transition"
-                                data-msg-id="1" data-msg-name="Sarah Johnson">
-                                <i class="fa-solid fa-reply mr-1"></i>Reply
-                            </button>
-                            <button
-                                class="mark-read text-gray-600 px-4 py-1 rounded-lg text-sm hover:bg-gray-100 transition"
-                                data-msg-id="1">
-                                <i class="fa-regular fa-circle-check mr-1"></i>Mark as read
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="message-card bg-white rounded-2xl shadow-md p-5 hover:shadow-lg transition">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <h3 class="font-bold text-[#835837] text-lg">David Martinez</h3>
-                                <p class="text-sm text-[#9B6B4A]">david.m@email.com</p>
-                            </div>
-                            <span class="text-xs text-gray-500">Yesterday</span>
-                        </div>
-                        <p class="mt-3 text-gray-700">I received my clay mugs yesterday. They're absolutely beautiful!
-                            Thank you for the fast shipping.</p>
-                        <div class="mt-3 flex gap-2">
-                            <button
-                                class="reply-msg bg-[#835837] text-white px-4 py-1 rounded-lg text-sm hover:bg-[#9B6B4A] transition"
-                                data-msg-id="2" data-msg-name="David Martinez">
-                                <i class="fa-solid fa-reply mr-1"></i>Reply
-                            </button>
-                            <button
-                                class="mark-read text-gray-600 px-4 py-1 rounded-lg text-sm hover:bg-gray-100 transition"
-                                data-msg-id="2" disabled>
-                                <i class="fa-regular fa-circle-check mr-1"></i>Read
-                            </button>
-                        </div>
-                    </div>
-
-                    <div
-                        class="message-card bg-[#FFF8F0] rounded-2xl shadow-md p-5 hover:shadow-lg transition border-l-4 border-[#835837]">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2">
-                                    <h3 class="font-bold text-[#835837] text-lg">Lisa Anderson</h3>
-                                    <span class="px-2 py-0.5 bg-red-100 text-red-600 rounded-full text-xs">New</span>
-                                </div>
-                                <p class="text-sm text-[#9B6B4A]">lisa.a@email.com</p>
-                            </div>
-                            <span class="text-xs text-gray-500">3 days ago</span>
-                        </div>
-                        <p class="mt-3 text-gray-700">Question about bulk ordering - I'm interested in purchasing 20 tea
-                            sets for my restaurant. Is that possible?</p>
-                        <div class="mt-3 flex gap-2">
-                            <button
-                                class="reply-msg bg-[#835837] text-white px-4 py-1 rounded-lg text-sm hover:bg-[#9B6B4A] transition"
-                                data-msg-id="3" data-msg-name="Lisa Anderson">
-                                <i class="fa-solid fa-reply mr-1"></i>Reply
-                            </button>
-                            <button
-                                class="mark-read text-gray-600 px-4 py-1 rounded-lg text-sm hover:bg-gray-100 transition"
-                                data-msg-id="3">
-                                <i class="fa-regular fa-circle-check mr-1"></i>Mark as read
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <!-- Analytics Section -->
             <section id="analyticsSection" class="dashboard-section hidden">
@@ -338,7 +233,7 @@
                             @else bg-gray-100 text-gray-700 @endif">
                                         {{ ucfirst($user->status) }}
                                     </span>
-                                  
+
                                 </div>
                             </div>
                         </div>
@@ -352,30 +247,7 @@
     @include('profile.craftsmen.info-craftsmen')
 
 
-    <!-- Reply Message Modal -->
-    <div id="replyModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-2xl w-full max-w-md mx-4 p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-[#835837]">Reply to <span id="replyToName"></span></h3>
-                <button id="closeReplyModalBtn" class="text-gray-400 hover:text-gray-600">&times;</button>
-            </div>
-            <form id="replyForm">
-                <div class="mb-4">
-                    <label class="block text-[#835837] mb-2">Your Reply</label>
-                    <textarea id="replyMessage" rows="4" required
-                        class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#835837]"
-                        placeholder="Type your reply here..."></textarea>
-                </div>
-                <div class="flex gap-3">
-                    <button type="submit"
-                        class="flex-1 bg-[#835837] text-white py-2 rounded-xl hover:bg-[#9B6B4A] transition">Send
-                        Reply</button>
-                    <button type="button" id="cancelReplyModalBtn"
-                        class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl hover:bg-gray-300 transition">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    
 
     {{-- <style>
         .dashboard-section {
@@ -426,14 +298,13 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('frontend/js/artisan-dashboard.js') }}"></script>
+    
     <script>
         // Tab switching functionality
         const tabs = document.querySelectorAll('.dashboard-tab');
         const sections = {
             products: document.getElementById('productsSection'),
             orders: document.getElementById('ordersSection'),
-            messages: document.getElementById('messagesSection'),
             analytics: document.getElementById('analyticsSection')
         };
 
@@ -464,13 +335,7 @@
             });
         });
 
-        // Animate visits progress bar
-        setTimeout(() => {
-            const visitsProgress = document.getElementById('visitsProgress');
-            if (visitsProgress) {
-                visitsProgress.style.width = '84.7%';
-            }
-        }, 100);
+
 
         // Edit profile modal
         const editProfileModal = document.getElementById('editProfileModal');
@@ -492,86 +357,6 @@
             document.body.classList.remove('modal-open');
         });
 
-        // document.getElementById('profileForm').addEventListener('submit', (e) => {
-        //     e.preventDefault();
-        //     document.getElementById('artisanName').innerText = document.getElementById('profileName').value;
-        //     document.querySelector('#artisanEmail').innerText = document.getElementById('profileEmail').value;
-        //     document.querySelector('#artisanPhone').innerHTML = '<i class="fa-solid fa-phone mr-1"></i>' + document
-        //         .getElementById('profilePhone').value;
-        //     document.querySelector('.text-gray-600.text-sm').innerText = document.getElementById('profileBio')
-        //         .value;
-        //     editProfileModal.classList.add('hidden');
-        //     document.body.classList.remove('modal-open');
-        //     alert('Profile updated successfully!');
-        // });
-
-        // Reply modal
-        const replyModal = document.getElementById('replyModal');
-        let currentReplyName = '';
-
-        document.querySelectorAll('.reply-msg').forEach(btn => {
-            btn.addEventListener('click', () => {
-                currentReplyName = btn.dataset.msgName;
-                document.getElementById('replyToName').innerText = currentReplyName;
-                replyModal.classList.remove('hidden');
-                replyModal.classList.add('flex');
-                document.body.classList.add('modal-open');
-            });
-        });
-
-        document.getElementById('closeReplyModalBtn').addEventListener('click', () => {
-            replyModal.classList.add('hidden');
-            document.body.classList.remove('modal-open');
-        });
-
-        document.getElementById('cancelReplyModalBtn').addEventListener('click', () => {
-            replyModal.classList.add('hidden');
-            document.body.classList.remove('modal-open');
-        });
-
-        document.getElementById('replyForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const reply = document.getElementById('replyMessage').value;
-            alert(`Reply sent to ${currentReplyName}!\n\nYour message: ${reply}`);
-            replyModal.classList.add('hidden');
-            document.body.classList.remove('modal-open');
-            document.getElementById('replyMessage').value = '';
-        });
-
-        // Mark as read
-        document.querySelectorAll('.mark-read').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (!this.disabled) {
-                    const messageCard = this.closest('.message-card');
-                    messageCard.classList.remove('bg-[#FFF8F0]');
-                    messageCard.classList.add('bg-white');
-                    messageCard.style.borderLeftColor = 'transparent';
-                    const newBadge = messageCard.querySelector('.bg-red-100');
-                    if (newBadge) newBadge.remove();
-                    this.disabled = true;
-                    this.innerHTML = '<i class="fa-regular fa-circle-check mr-1"></i>Read';
-                    alert('Message marked as read');
-                }
-            });
-        });
-
-        // Mark all read
-        document.getElementById('markAllRead').addEventListener('click', () => {
-            document.querySelectorAll('.mark-read').forEach(btn => {
-                if (!btn.disabled) {
-                    const messageCard = btn.closest('.message-card');
-                    messageCard.classList.remove('bg-[#FFF8F0]');
-                    messageCard.classList.add('bg-white');
-                    messageCard.style.borderLeftColor = 'transparent';
-                    const newBadge = messageCard.querySelector('.bg-red-100');
-                    if (newBadge) newBadge.remove();
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fa-regular fa-circle-check mr-1"></i>Read';
-                }
-            });
-            alert('All messages marked as read');
-        });
-
         // Search products
         document.getElementById('searchProduct').addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
@@ -586,77 +371,8 @@
             });
         });
 
-        // // Add product button
-        // document.addEventListener('DOMContentLoaded', function() {
-
-        //     const openBtn = document.getElementById('addProductBtn');
-        //     const modal = document.getElementById('addProductModal');
-        //     const closeBtn = document.getElementById('closeModalBtnProduct');
-        //     const cancelBtn = document.getElementById('cancelModalBtn');
-
-        //     // open modal
-        //     openBtn.addEventListener('click', () => {
-        //         modal.classList.remove('hidden');
-        //         modal.classList.add('flex');
-        //     });
-
-        //     // close modal (X button)
-        //     closeBtn.addEventListener('click', () => {
-        //         modal.classList.add('hidden');
-        //         modal.classList.remove('flex');
-        //     });
-
-        //     // cancel button
-        //     cancelBtn.addEventListener('click', () => {
-        //         modal.classList.add('hidden');
-        //         modal.classList.remove('flex');
-        //     });
-
-        //     // click outside modal
-        //     modal.addEventListener('click', (e) => {
-        //         if (e.target === modal) {
-        //             modal.classList.add('hidden');
-        //             modal.classList.remove('flex');
-        //         }
-        //     });
-
-        // });
-
-
-        // Edit product
-        // document.querySelectorAll('.edit-product').forEach(btn => {
-        //     btn.addEventListener('click', (e) => {
-        //         const productCard = e.target.closest('.product-card');
-        //         const productName = productCard.querySelector('h3').innerText;
-        //         // alert(`Edit product: ${productName}`);
-        //     });
-        // });
-
-        // Delete product
-        document.querySelectorAll('.delete-product').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                if (confirm('Are you sure you want to delete this product?')) {
-                    const productCard = e.target.closest('.product-card');
-                    productCard.style.opacity = '0';
-                    setTimeout(() => {
-                        productCard.remove();
-                    }, 300);
-                }
-            });
-        });
-        const openBtn = document.getElementById("openEditModal");
-        const modal = document.getElementById("editModal");
-        const closeBtn = document.getElementById("closeEditModal");
-
-        openBtn.addEventListener("click", function(e) {
-            e.preventDefault();
-            modal.classList.remove("hidden");
-            modal.classList.add("flex");
-        });
-
-        closeBtn.addEventListener("click", function() {
-            modal.classList.add("hidden");
-            modal.classList.remove("flex");
-        });
+     
+     
     </script>
+    
 @endpush

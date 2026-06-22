@@ -101,6 +101,7 @@
 @push('scripts')
     <script src="{{ asset('frontend/js/image.js') }}"></script>
     <script src="{{ asset('frontend/js/status.js') }}"></script>
+    <script src="{{ asset('frontend/js/attributes.js') }}"></script>
 
     <script>
         // متغير لتتبع الصور المحذوفة

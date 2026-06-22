@@ -28,7 +28,6 @@ class Product extends Model
     }
     public function scopeSearch($query, $request)
     {
-       
         // Category
         if ($request->categories_name && $request->categories_name !== 'all') {
             $query->where('category_id', $request->categories_name);
@@ -74,7 +73,7 @@ class Product extends Model
             set: fn($value) => (int) $value,
         );
     }
-    protected function carts()
+    public function carts()
     {
         return $this->hasMany(Cart::class);
     }

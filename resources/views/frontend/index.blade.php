@@ -68,23 +68,28 @@
                 <p class="text-[#9A7F73] capitalize">Meet the talented creators behind these masterpieces</p>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 px-6 md:px-16">
+
                 @forelse($users as $user)
-                    <div
-                        class="bg-[#f3e6dc] rounded-2xl shadow-md overflow-hidden p-4 text-center hover:shadow-xl hover:-translate-y-1 transition duration-300">
-                        <img src="{{ $user->image ? asset('storage/' . $user->image) : asset('backend/image/avatar.jpg') }}"
-                            class="w-24 h-24 mx-auto rounded-full border-4 border-white mb-4 object-cover">
-                        <div class="bg-white p-4 rounded-xl shadow-sm">
-                            <h3 class="text-base font-bold text-[#835837] mb-1">{{ $user->name }}</h3>
-                            <p class="flex justify-center items-center gap-1 text-sm text-[#835837] mb-2"><i
-                                    class="fa-solid fa-location-dot text-[#c8a98d]"></i>{{ $user->address }}</p>
-                            <p class="text-xs text-[#9A7F73] mb-5">{{ $user->description }}</p>
-                            <div class="flex justify-between text-sm text-[#835837] font-medium">
-                                <span class="flex items-center gap-1"><i
-                                        class="fa-solid fa-star text-yellow-500"></i>4.8</span>
-                                <span>444 Products</span>
+                    <a href="{{ route('frontend.artisan.show', $user->id) }}">
+                        <div
+                            class="bg-[#f3e6dc] rounded-2xl shadow-md overflow-hidden p-4 text-center hover:shadow-xl hover:-translate-y-1 transition duration-300">
+                            <img src="{{ $user->image ? asset('storage/' . $user->image) : asset('backend/image/avatar.jpg') }}"
+                                class="w-24 h-24 mx-auto rounded-full border-4 border-white mb-4 object-cover">
+                            <div class="bg-white p-4 rounded-xl shadow-sm">
+                                <h3 class="text-base font-bold text-[#835837] mb-1">{{ $user->name }}</h3>
+                                <p class="flex justify-center items-center gap-1 text-sm text-[#835837] mb-2"><i
+                                        class="fa-solid fa-location-dot text-[#c8a98d]"></i>{{ $user->address }}</p>
+                                <p class="text-xs text-[#9A7F73] mb-5">{{ $user->bio }}</p>
+                                <div class="flex justify-between text-sm text-[#835837] font-medium">
+                                    <span class="flex items-center gap-1"><i
+                                            class="fa-solid fa-star text-yellow-500"></i>{{ $user->product->rating ?? '0' }}
+                                    </span>
+                                    <span>{{ $user->product->stock_quantity ?? '0' }} Products</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
+
 
                 @empty
                     <div class="text-center col-span-4 py-12">
@@ -114,67 +119,84 @@
     </section>
     <section class="bg-[#F7EEE9] py-14">
         <div class="max-w-4xl mx-auto px-6">
+
+            {{-- Header --}}
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-[#835837] mb-2">Workshops This Month</h2>
-                <p class="text-[#9A7F73] capitalize">Learn a new skill with the best artisans</p>
+                <h2 class="text-3xl font-bold text-[#835837] mb-2">
+                    Workshops This Month
+                </h2>
+                <p class="text-[#9A7F73] capitalize">
+                    Learn a new skill with the best artisans
+                </p>
             </div>
-            <div class="relative">
-                <!-- Slider -->
+
+            {{-- Slider --}}
+            <div class="relative bg-white rounded-xl shadow-md overflow-hidden">
+
                 <div id="slider" class="flex items-start transition-transform duration-500">
+
                     @forelse ($workshops as $workshop)
                         <div class="min-w-full flex flex-col md:flex-row md:h-[320px]">
+
+                            {{-- Image --}}
                             <img src="{{ asset('storage/' . $workshop->image) }}"
                                 class="w-full md:w-1/2 h-56 md:h-full object-cover">
 
+                            {{-- Content --}}
                             <div class="flex flex-col justify-between md:justify-center h-full p-5">
+
                                 <h3 class="text-xl font-medium text-[#835837] mb-2">
                                     {{ $workshop->title }}
                                 </h3>
 
-                                <p class="text-[#9A7F73] mb-4">{{ $workshop->description }}</p>
-                                <p class="text-sm font-medium mb-1">
-                                    Date:
-                                    {{ \Carbon\Carbon::parse($workshop->date)->format('d M Y') }}
+                                <p class="text-[#9A7F73] mb-4">
+                                    {{ $workshop->description }}
                                 </p>
+
+                                <p class="text-sm font-medium mb-1">
+                                    Date: {{ \Carbon\Carbon::parse($workshop->date)->format('Y-m-d') }}
+                                </p>
+
                                 <p class="text-sm font-medium mb-1">
                                     Duration: {{ $workshop->duration }} Hours
                                 </p>
+
                                 <p class="text-sm font-medium mb-1">
                                     Price: ${{ $workshop->price }}
                                 </p>
+
                                 <p class="text-sm font-medium mb-4">
                                     Available Slots: {{ $workshop->availableSlots }}
                                 </p>
+
+                                <button type="button"
+                                        class="openContact inline-block bg-[#a05a1c] text-white text-center py-2 px-4 mt-4 rounded-lg hover:bg-[#6b3a12] transition">Contact
+                                        Us Now</button>
+
                             </div>
                         </div>
+                        @include('frontend.workshop.model')
                     @empty
-                        {{-- Empty state with nice styling --}}
-                        <div class="min-w-full flex flex-col items-center justify-center py-16 px-4 text-center">
-                            <div class="w-20 h-20 rounded-full bg-[#f3e7df] flex items-center justify-center mb-4">
-                                <svg class="w-10 h-10 text-[#835837]" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                </svg>
-                            </div>
-                            <h3 class="text-xl font-medium text-[#835837] mb-2">No Workshops Available</h3>
-                            <p class="text-[#9A7F73] max-w-sm">Check back later for new workshops and events.</p>
+                        <div class="p-6 text-center text-[#9A7F73] w-full">
+                            No workshops available at the moment.
                         </div>
                     @endforelse
+
                 </div>
 
-                {{-- Buttons - only show when workshops exist --}}
+                {{-- Buttons --}}
                 @if ($workshops->isNotEmpty())
                     <button id="prev"
-                        class="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 bg-white text-[#835837] text-xl shadow-xl w-10 h-10 justify-center items-center rounded-full transition hover:bg-[#f3e7df]">
+                        class="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 bg-white text-[#835837] text-xl shadow-xl w-10 h-10 justify-center items-center rounded-full hover:bg-[#f3e7df] transition">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
 
                     <button id="next"
-                        class="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 bg-white text-[#835837] text-xl shadow-xl w-10 h-10 justify-center items-center rounded-full transition hover:bg-[#f3e7df]">
+                        class="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 bg-white text-[#835837] text-xl shadow-xl w-10 h-10 justify-center items-center rounded-full hover:bg-[#f3e7df] transition">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 @endif
+
             </div>
         </div>
     </section>
@@ -191,3 +213,6 @@
         </div>
     </section>
 @endsection
+@push('scripts')
+    <script type="module" src="{{ asset('frontend/js/home-workshops.js') }}"></script>
+@endpush

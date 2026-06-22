@@ -19,9 +19,17 @@
                         <a href="{{ route('frontend.artisan.show', $artisan->id) }}"
                             class="bg-[#EAD8CC] rounded-2xl shadow-md border border-[#e5d3c5] p-4 text-center transition duration-300 cursor-pointer hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02]">
 
-                            <img src="{{ $artisan->image ? asset('storage/' . $artisan->image) : asset('backend/image/avatar.jpg') }}"
-                                class="w-24 h-24 mx-auto rounded-full border-4 border-white mb-4 object-cover">
+                            <div
+                                class=" bg-[#F7EEE9] flex justify-center items-center rounded-full shadow-md border-4 border-[#F4E7DD] overflow-hidden w-24 h-24 mx-auto rounded-full border-4 mb-4 ">
 
+                                @if ($artisan->image)
+                                    <img src="{{ asset('storage/' . $artisan->image) }}"
+                                        class="w-full h-full object-cover rounded-full" />
+                                @else
+                                    <i class="fa-solid fa-user text-5xl text-[#9B6B4A]"></i>
+                                @endif
+
+                            </div>
                             <div class="bg-white p-4 rounded-xl shadow-sm">
 
                                 <h3 class="text-[#835837] font-bold mb-1">{{ $artisan->name }}</h3>

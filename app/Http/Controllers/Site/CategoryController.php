@@ -9,23 +9,25 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    
+
     public function index(Request $request)
     {
         $categories = Category::get();
-        
+
         $maxprice = Category::withMax('products', 'price')->get();
         return view('frontend.categories', compact('categories', 'maxprice'));
     }
-    public function products($id)
+    public function products(Request $request, $id)
     {
         $category = Category::findOrFail($id);
-        $products = $category->products()->where('status','active')->get();
-         $sellers = User::where('status', 'active')->where('role', 'craftsmen')->pluck('name', 'id')->toArray();
-         $addresses =  User::where('status', 'active')->where('role', 'craftsmen')->pluck('address', 'id')->toArray();
+        $products = $category->products()->where('status', 'active')->filter($request->all())
+            ->paginate(10);
+        $sellers = User::where('status', 'active')->where('role', 'craftsmen')->pluck('name', 'id')->toArray();
+        $addresses =  User::where('status', 'active')->where('role', 'craftsmen')->pluck('address', 'id')->toArray();
         $categories = Category::all();
-        return view('frontend.products.products', compact('category', 'products', 'categories','sellers','addresses'));
+        return view(
+            'frontend.products.products',
+            compact('category', 'products', 'categories', 'sellers', 'addresses')
+        );
     }
-
-    
 }

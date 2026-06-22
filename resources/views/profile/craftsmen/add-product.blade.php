@@ -31,7 +31,7 @@
                 <form action="{{ route('craftsmen.product.store') }}" method="POST" enctype="multipart/form-data"
                     class="space-y-8">
                     @csrf
-                @include('profile.craftsmen._form')
+                    @include('profile.craftsmen._form')
                     {{-- ================= ACTIONS ================= --}}
                     <hr class="border-gray-200 mt-10">
 
@@ -100,80 +100,71 @@
 @push('scripts')
     <script src="{{ asset('frontend/js/image.js') }}"></script>
     <script src="{{ asset('frontend/js/status.js') }}"></script>
-    {{-- // الصور الفرعية
+    <script src="{{ asset('frontend/js/attributes.js') }}"></script>
     <script>
-        const imagesInput = document.getElementById('imagesInput');
-        const preview = document.getElementById('preview');
-        let allImages = [];
+        document.addEventListener('DOMContentLoaded', function() {
 
-        imagesInput.addEventListener('change', function(e) {
-            // إضافة الصور الجديدة
-            Array.from(this.files).forEach((file) => {
-                if (!allImages.some(img => img.name === file.name && img.size === file.size)) {
-                    allImages.push(file);
-                }
+            const input = document.getElementById('imagesInput');
+            const container = document.getElementById('previewContainer');
+
+            let dataTransfer = new DataTransfer();
+
+            input.addEventListener('change', function() {
+
+                container.innerHTML = "";
+
+                Array.from(this.files).forEach((file) => {
+                    dataTransfer.items.add(file);
+                });
+
+                this.files = dataTransfer.files;
+
+                render();
             });
 
-            renderAllImages();
-            imagesInput.value = ''; // تفريغ الـ input
-        });
+            function render() {
+                container.innerHTML = "";
 
-        function renderAllImages() {
-            preview.innerHTML = '';
+                Array.from(input.files).forEach((file, index) => {
+                    const reader = new FileReader();
 
-            allImages.forEach((file, index) => {
-                const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const div = document.createElement('div');
+                        div.className = "relative w-32 h-32";
 
-                reader.onload = function(event) {
-                    const imageDiv = document.createElement('div');
-                    imageDiv.className =
-                        'relative group rounded-lg overflow-hidden border border-gray-200 hover:shadow-md transition';
-                    imageDiv.innerHTML = `
-                    <img src="${event.target.result}" alt="Preview ${index + 1}" 
-                        class="w-full h-32 object-cover">
-                    <button type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                        div.innerHTML = `
+                    <img src="${e.target.result}" class="w-32 h-32 object-cover rounded border">
+
+                    <button type="button"
+                        class="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full"
                         onclick="removeImage(${index})">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
+                        ×
                     </button>
                 `;
-                    preview.appendChild(imageDiv);
-                };
 
-                reader.readAsDataURL(file);
-            });
-        }
+                        container.appendChild(div);
+                    };
 
-        function removeImage(index) {
-            allImages.splice(index, 1);
-            renderAllImages();
-        }
+                    reader.readAsDataURL(file);
+                });
+            }
 
-        // قبل الإرسال - حط الصور في FormData
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault();
+            window.removeImage = function(index) {
 
-            const formData = new FormData(this);
+                const newDT = new DataTransfer();
 
-            // حط كل الصور
-            allImages.forEach(image => {
-                formData.append('images[]', image);
-            });
-            // أرسل الفورم
-            fetch(this.action, {
-                    method: this.method,
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-                    }
-                }).then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.href = '{{ route('craftsmen.profile.index') }}';
+                Array.from(input.files).forEach((file, i) => {
+                    if (i !== index) {
+                        newDT.items.add(file);
                     }
                 });
-        });
-    </script> --}}
 
+                input.files = newDT.files;
+
+                render();
+            };
+
+        });
+    </script>
+ 
 @endpush

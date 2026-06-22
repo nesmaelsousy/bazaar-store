@@ -10,7 +10,7 @@
 
         <!-- User Panel -->
         <div class="user-panel mt-3 pb-3 mb-3 text-center">
-           <h5 class="text-white " >Bazaar Store</h5>
+         <a href="{{ route('frontend.index') }}"><h5 class="text-white " >Bazaar Store</h5></a>  
         </div>
 
 
@@ -209,7 +209,7 @@
                 
                 <!-- Settings -->
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('admin.settings.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-cog"></i>
                         <p>Settings</p>
                     </a>

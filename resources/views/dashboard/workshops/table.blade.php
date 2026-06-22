@@ -21,6 +21,8 @@
                 <td>{{ $loop->iteration  }}</td>
                 <td> {{ $workshop->title }}</td>
                 <td>{{ $workshop->description }}</td>
+
+
                 <td> <img  src="{{ asset('storage/' . $workshop->image) }}" alt="{{ $workshop->title }}" width="100"> </td>
                 <td>{{ $workshop->duration }}</td>
                 <td>{{ $workshop->price }}</td>

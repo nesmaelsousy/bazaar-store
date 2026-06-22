@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Site\CartController;
 use App\Http\Controllers\Site\CheckoutController;
@@ -57,8 +56,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-        Route::get('/chat/{artisan}', [ChatController::class, 'show'])
-            ->name('chat.show');
+       
     });
     // craftsmen  
     Route::prefix('craftsmen')->middleware(['role:craftsmen'])->name('craftsmen.')

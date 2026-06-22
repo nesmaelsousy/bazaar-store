@@ -30,7 +30,7 @@
                 </h1>
 
                 <!-- RATING -->
-              
+
 
                 <div class="flex text-yellow-400  text-xl">
                     @for ($i = 1; $i <= 5; $i++)
@@ -42,7 +42,7 @@
                     @endfor
                 </div>
                 <div class="flex items-center gap-1 mb-4">
-                  
+
                     <span class="text-md text-[#835837] font-semibold">rating: {{ round($product->rating, 1) }}</span>
                 </div>
 
@@ -87,30 +87,17 @@
                                 </div>
                             @endforeach
 
+                            @if ($product->allow_engraving === 1)
+                                <!-- ENGRAVING -->
+                                <div>
+                                    <label class="block text-md text-[#9B6B4A] font-semibold mb-1">
+                                        Engraving :
+                                    </label>
+                                    <textarea name="engraving" id="" rows="5" class="w-full p-2 border rounded-lg">{{ old('engraving', $cart->engraving ?? '') }}</textarea>
 
+                                </div>
+                            @endif
 
-                            {{-- <!-- SIZE -->
-                            <div class="mb-4">
-                                <label class="block text-md text-[#9B6B4A] font-semibold mb-1">
-                                    Size :
-                                </label>
-
-                                <select class="w-full p-2 bg-white border rounded-lg">
-                                    @foreach ($product->sizes as $size)
-                                        <option value="{{ $size }}">{{ $size }}</option>
-                                    @endforeach
-
-                                </select>
-                            </div> --}}
-
-                            <!-- ENGRAVING -->
-                            <div>
-                                <label class="block text-md text-[#9B6B4A] font-semibold mb-1">
-                                    Engraving :
-                                </label>
-                                <textarea name="engraving" id="" rows="5" class="w-full p-2 border rounded-lg">{{ old('engraving', $cart->engraving ?? '') }}</textarea>
-
-                            </div>
 
                         </div>
                     @endif

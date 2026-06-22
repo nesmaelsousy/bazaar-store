@@ -21,9 +21,10 @@ return new class extends Migration {
             $table->string('rating')->nullable();
             $table->decimal('price', 10, 2);
             $table->string('image')->nullable();
-             $table->json('images')->nullable();
+            $table->json('images')->nullable();
             $table->enum('status', ['active', 'archived'])->default('active');
             $table->boolean('is_customizable')->default(false);
+            $table->boolean('allow_engraving')->default(false);
             $table->timestamps();
         });
     }

@@ -38,7 +38,8 @@ class productRequest extends FormRequest
         'is_customizable' => 'required|in:0,1',
         'description' => 'nullable|string',
         'seller_id' => 'required|exists:users,id',
-        'value' => 'nullable|json'
+        'value' => 'nullable|json',
+        'allow_engraving'=>'nullable'
     ];
 }
     

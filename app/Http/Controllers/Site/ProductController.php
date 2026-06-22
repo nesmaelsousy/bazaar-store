@@ -21,51 +21,59 @@ class ProductController extends Controller
     use AuthorizesRequests;
     use ProductManageable;
     use UploadableImage;
-    /**
-     * Display a listing of the resource.
-     */
+
+    // ================= INDEX =================
     public function index(Request $request)
     {
-        $products = Product::where('status', 'active')->Search($request)->when($request->sort == 'low_high', function ($q) {
-            $q->orderBy('price', 'asc');
-        })
-        ->when($request->sort == 'high_low', function ($q) {
-            $q->orderBy('price', 'desc');
-        })->get();
-        //  dd($products);
+        $products = Product::where('status', 'active')
+            ->Search($request)
+            ->paginate(12);
+
         $categories = Category::where('status', 'active')->pluck('name', 'id')->toArray();
-        $sellers = User::where('status', 'active')->where('role', 'craftsmen')->pluck('name', 'id')->toArray();
-         $addresses =  User::where('status', 'active')->where('role', 'craftsmen')->pluck('address', 'id')->toArray();
-        
-        return view('frontend.products.products', compact('products', 'categories', 'sellers','addresses'));
+        $sellers = User::where('status', 'active')
+            ->where('role', 'craftsmen')
+            ->pluck('name', 'id')->toArray();
+
+        $addresses = User::where('status', 'active')
+            ->where('role', 'craftsmen')
+            ->pluck('address', 'id')->toArray();
+
+        return view('frontend.products.products', compact(
+            'products',
+            'categories',
+            'sellers',
+            'addresses'
+        ));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // ================= CREATE =================
     public function create()
     {
         $product = new Product();
         $categories = Category::where('status', 'active')->pluck('name', 'id')->toArray();
         $attributes = Attribute::all();
-        return view('profile.craftsmen.add-product', compact('categories', 'product', 'attributes'));
+
+        return view('profile.craftsmen.add-product', compact(
+            'categories',
+            'product',
+            'attributes'
+        ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // ================= STORE =================
     public function store(ProductRequest $request)
     {
         $this->authorize('create', Product::class);
 
         $data = $request->validated();
-        // dd($request->all());
+
         try {
-            if ($request->hasFile('images')) {
-                $data['images'] = $this->storeImages($request->file('images'));
-            } else {
-                $data['images'] = [];
-            }
+            // dd($request->product_attributes);
+
+            // ================= IMAGES =================
+            $data['images'] = $request->hasFile('images')
+                ? $this->storeImages($request->file('images'))
+                : [];
 
             $data['is_customizable'] = (int) $data['is_customizable'];
 
@@ -73,155 +81,180 @@ class ProductController extends Controller
                 $data['image'] = $this->uploadImage($request, 'products');
             }
 
-            // إنشاء المنتج
+            // ================= CREATE PRODUCT =================
             $product = $this->createProductWithSlug($data);
 
-            // attributes
-            if ($request->has('product_attributes') && !empty($request->product_attributes)) {
-
-                // 1. تحويل JSON إلى مصفوفة PHP
-                $attributes = json_decode($request->product_attributes, true);
-
-                // 2. التحقق من أن البيانات صحيحة
-                if (is_array($attributes) && count($attributes) > 0) {
-                    // 3. تجهيز البيانات للإرفاق
-                    $pivotData = [];
-
-                    foreach ($attributes as $attributeId => $attributeData) {
-                        // التأكد من وجود قيمة
-                        if (isset($attributeData['value']) && !empty($attributeData['value'])) {
-
-                            // 4. تخزين القيمة في حقل JSON بالجدول البيفوت
-                            $pivotData[$attributeId] = [
-                                'value' => json_encode([
-                                    'name' => $attributeData['name'] ?? '',
-                                    'value' => $attributeData['value']
-                                ])
-                            ];
-                        }
-                    }
-
-                    // 5. إرفاق الخصائص بالمنتج
-                    if (!empty($pivotData)) {
-                        $product->attributes()->attach($pivotData);
-                    }
-                }
-            }
+            // ================= ATTRIBUTES =================
+            $this->syncAttributes($request, $product);
         } catch (Throwable $e) {
-            return $e;
+            return redirect()->back()->withErrors($e->getMessage());
         }
-
-
 
         return redirect()->route('craftsmen.profile.index')
             ->with('success', 'Product created successfully');
     }
 
-
+    // ================= SHOW =================
     public function show(Product $product)
     {
         $product->load('attributes');
-        // $rating = $product->rating;
+
         return view('frontend.products.product-details', compact('product'));
     }
-    // add to favorites
+
+
+
+    // ================= EDIT =================
+    public function edit(Product $product)
+    {
+        $categories = Category::where('status', 'active')->pluck('name', 'id')->toArray();
+        $attributes = Attribute::all();
+
+        return view('profile.craftsmen.edit', compact('product', 'categories', 'attributes'));
+    }
+
+    // ================= UPDATE =================
+    public function update(productRequest $request, Product $product)
+    {
+        $this->authorize('update', $product);
+
+        $data = $request->validated();
+
+        try {
+
+            // main image =
+            $currentImagePath = $request->image;
+
+            if ($request->hasFile('image')) {
+                $data['image'] = $this->updateImage($request, $currentImagePath, 'products');
+            }
+
+            // if remove image
+            if ($request->has('removed_images')) {
+
+                $removedImages = json_decode($request->removed_images, true);
+
+                if (is_array($removedImages)) {
+
+                    foreach ($removedImages as $imagePath) {
+                        if (Storage::exists($imagePath)) {
+                            Storage::delete($imagePath);
+                        }
+                    }
+
+                    $existingImages = $product->images ?? [];
+
+                    $data['images'] = array_values(array_filter(
+                        $existingImages,
+                        fn($img) => !in_array($img, $removedImages)
+                    ));
+                }
+            }
+
+            // new image outher
+            if ($request->hasFile('images')) {
+
+                $newImages = $this->storeImages($request->file('images'));
+
+                $existingImages = $product->images ?? [];
+
+                $data['images'] = array_merge($existingImages, $newImages);
+            }
+
+            // update product
+            $product->update($data);
+
+            // update attrbute
+            $this->syncAttributes($request, $product);
+        } catch (Throwable $e) {
+            return redirect()->back()->withErrors($e->getMessage());
+        }
+
+        return redirect()->route('craftsmen.profile.index')
+            ->with('success', 'The product has been modified');
+    }
+
+    // delete product
+    public function destroy(Product $product)
+    {
+        $this->authorize('delete', $product);
+
+        $product->delete();
+
+        $this->deleteOldImage($product->image);
+
+        return redirect()->route('craftsmen.profile.index')
+            ->with('error', 'The product has been removed.');
+    }
+
+    // ================= STORE IMAGES =================
+    private function storeImages($images)
+    {
+        $paths = [];
+
+        foreach ($images as $image) {
+            $paths[] = $image->store('products', 'public');
+        }
+
+        return $paths;
+    }
+
+    // sync Attributes
+    private function syncAttributes(Request $request, Product $product)
+    {
+        if (!$request->product_attributes) {
+            return;
+        }
+
+        $attributes = json_decode($request->product_attributes, true);
+
+        if (!is_array($attributes)) {
+            return;
+        }
+
+        $pivot = [];
+
+        foreach ($attributes as $id => $attribute) {
+
+            $value = $attribute['value'] ?? null;
+
+            if (!$value) {
+                continue;
+            }
+
+            $pivot[$id] = [
+                'value' => json_encode([
+                    'value' => $value
+                ])
+            ];
+        }
+
+        $product->attributes()->sync($pivot);
+    }
+    // ================= FAVORITES =================
     public function addToFavorites(Request $request, Product $product)
     {
         $user = auth()->user();
+
         if (!$user) {
             session(['url.intended' => route('frontend.favorites.index')]);
             return redirect()->route('login');
         }
+
         $favorite = favorite::where('user_id', $user->id)
-            ->where('product_id', $product->id)->first();
+            ->where('product_id', $product->id)
+            ->first();
+
         if ($favorite) {
             $favorite->delete();
             return back()->with('success', 'Product removed from favorites.');
         }
+
         favorite::create([
             'user_id' => $user->id,
             'product_id' => $product->id,
         ]);
+
         return back()->with('success', 'Product added to favorites.');
-    }
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Product $product)
-    {
-        $categories = Category::where('status', 'active')->pluck('name', 'id')->toArray();
-        return view('profile.craftsmen.edit', compact('product', 'categories'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(productRequest $request, Product $product)
-    {
-        $this->authorize('update', $product);
-        $data = $request->validated();
-
-        // لو الصورة الاساسية صار عليها اي تحديث 
-        $currentImagePath = $request->image;
-        if ($request->hasFile('image')) {
-            $data['image'] = $this->updateImage($request, $currentImagePath, 'products');
-        }
-        
-        if ($request->has('removed_images')) {
-            $removedImages = json_decode($request->input('removed_images'), true);
-
-            if (is_array($removedImages) && count($removedImages) > 0) {
-                // حذف من Storage
-                foreach ($removedImages as $imagePath) {
-                    if (Storage::exists($imagePath)) {
-                        Storage::delete($imagePath);
-                    }
-                }
-
-                // حذف من array البيانات
-                $existingImages = $product->images ?? [];
-                $data['images'] = array_filter($existingImages, function ($img) use ($removedImages) {
-                    return !in_array($img, $removedImages);
-                });
-                $data['images'] = array_values($data['images']); // إعادة ترتيب الـ index
-            }
-        }
-
-     
-        if ($request->hasFile('images')) {
-            $newImages = $this->storeImages($request->file('images'));
-          
-            $existingImages = $product->images ?? [];
-            $data['images'] = array_merge($existingImages, $newImages);
-        }
-        try {
-            $product->update($data);
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors($e->getMessage());
-        }
-        return redirect()->route('craftsmen.profile.index')->with('success', 'The product has been modified');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Product $product)
-    {
-        $this->authorize('delete', $product);
-        $product->delete();
-        $imagePath = $product->image;
-        //delete image
-        $this->deleteOldImage($imagePath);
-        return redirect()->route('craftsmen.profile.index')->with('error', 'The product has been removed.');
-    }
-    // تخزين الصور الاخرى 
-    private function storeImages($images)
-    {
-        $paths = [];
-        foreach ($images as $image) {
-            $path = $image->store('products', 'public');
-            $paths[] = $path;
-        }
-        return $paths;
     }
 }

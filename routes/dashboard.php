@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\OrderController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\Admin\AuthController;
 use App\Http\Controllers\Dashboard\Admin\ProfileController;
+use App\Http\Controllers\Dashboard\Admin\SettingController;
 use App\Http\Controllers\Dashboard\AttributeController;
 use App\Http\Controllers\Dashboard\ContactController;
 use App\Http\Controllers\Dashboard\User\UserController;
@@ -16,15 +17,20 @@ use App\Http\Controllers\Dashboard\User\UserController;
 // Admin routes
 
 Route::prefix('admin')->name('admin.')->group(function () {
+
     Route::middleware('guest:admin')->group(function () {
         Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
         Route::post('/login', [AuthController::class, 'login']);
     });
-    Route::middleware('auth:admin')->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::resource('/profile', ProfileController::class);
-        Route::resource('/settings', ProfileController::class);
+
+    Route::prefix('/dashboard')->middleware('auth:admin')->group(function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+        Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::post('/deleteImage', [ProfileController::class, 'deleteImage'])->name('deleteImage');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
 
         Route::resource('user', UserController::class);
         Route::resource('product', ProductController::class);
@@ -38,8 +44,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('order', OrderController::class);
 
         Route::resource('workshop', WorkshopsController::class);
-        Route::post('/deleteImage', [ProfileController::class, 'deleteImage'])
-            ->name('admin.deleteImage');
     });
 
 

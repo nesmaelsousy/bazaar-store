@@ -79,14 +79,14 @@
             <a href="#" class="nav-link dropdown-toggle rounded p-2 " data-toggle="dropdown" style="color: #F0E8E0;
             ">
 
-                @if (Auth::user()->image ?? false)
-                    <img src="{{ asset('storage/' . Auth::user()->image) }}" class="user-image img-circle " alt="User Image" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #6c6156;">
+                @if (Auth::guard('admin')->user()?->image)
+                    <img src="{{ asset('storage/' . Auth::guard('admin')->user()->image) }}" class="user-image img-circle " alt="User Image" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #6c6156;">
                 @else
                     <img src="{{ asset('backend/image/avatar.jpg')}}" class="user-image img-circle " alt="User Image" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #F0E8E0;">
                 @endif
 
                 <span class="d-none d-md-inline" style="color: #6c6156; font-weight: 500;">
-                    {{ Auth::user()->name ?? 'User' }}
+                    {{ Auth::guard('admin')->user()?->name ?? 'User' }}
                 </span>
             </a>
 
@@ -94,8 +94,8 @@
 
                 <div class="dropdown-item" style="padding: 16px; background: #5C3D2E; border-radius: 12px 12px 0 0;">
                     <div class="text-center" style="color: #F0E8E0;">
-                        <div style="font-weight: 700; font-size: 1.1rem;">{{ Auth::user()->name ?? 'User' }}</div>
-                        <div style="font-size: 0.85rem; opacity: 0.8;">{{ Auth::user()->email ?? '' }}</div>
+                        <div style="font-weight: 700; font-size: 1.1rem;">{{ Auth::guard('admin')->user()?->name ?? 'User' }}</div>
+                        <div style="font-size: 0.85rem; opacity: 0.8;">{{ Auth::guard('admin')->user()?->email ?? '' }}</div>
                     </div>
                 </div>
 
@@ -106,14 +106,14 @@
                     Profile
                 </a>
 
-                <a href="{{ route('admin.settings.index') }}" class="dropdown-item" style="padding: 12px 16px; color: #5C3D2E; transition: all 0.2s;" onmouseover="this.style.background='#FBF7F4'" onmouseout="this.style.background='transparent'">
+                <a href="{{ route('admin.profile.index') }}" class="dropdown-item" style="padding: 12px 16px; color: #5C3D2E; transition: all 0.2s;" onmouseover="this.style.background='#FBF7F4'" onmouseout="this.style.background='transparent'">
                     <i class="fas fa-cog mr-2" style="color: #cc7824;"></i>
                     Settings
                 </a>
 
                 <div class="dropdown-divider" style="margin: 0; border-color: #E8DCD2;"></div>
 
-                <form action="{{ route('logout') }}" method="POST">
+                <form action="{{ route('admin.logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="dropdown-item" style="padding: 12px 16px; color: #C0392B; transition: all 0.2s; width: 100%; text-align: left; border: none; background: transparent;" onmouseover="this.style.background='#FBF7F4'" onmouseout="this.style.background='transparent'">
                         <i class="fas fa-sign-out-alt mr-2"></i>

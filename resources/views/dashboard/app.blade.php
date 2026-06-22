@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> BAZZAR | Dashboard</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>BAZZAR | @yield('title', 'Dashboard')</title>
     
     <!-- Google Font: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,8 +32,6 @@
     <link rel="stylesheet" href="{{ asset('backend/plugins/summernote/summernote-bs4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/dist/css/custom.css') }}">
     @stack('css')
-    @stack('js')
-   
 
 </head>
 
@@ -40,7 +39,29 @@
     <div class="wrapper">
         @include('dashboard.include.header')
         @include('dashboard.include.sidebar')
-     
+
+        @if (session('success'))
+            <div class="container-fluid mt-3">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="container-fluid mt-3">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        @endif
+
         @yield('content')
         <!-- /.content-wrapper -->
         <footer class="main-footer">

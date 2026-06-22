@@ -87,7 +87,7 @@
                     <p class="text-xs text-gray-500 mt-1">choose other image</p>
 
                     {{-- Preview --}}
-                    <div id="preview" class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+                    <div id="previewContainer" class="flex gap-2">
 
                     </div>
 
@@ -165,4 +165,4 @@
 
         </div>
         @include('profile.craftsmen.attributes')
-       
+

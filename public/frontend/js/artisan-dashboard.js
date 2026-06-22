@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const sections = {
     products: document.getElementById("productsSection"),
     orders: document.getElementById("ordersSection"),
-    messages: document.getElementById("messagesSection"),
+    // messages: document.getElementById("messagesSection"),
     analytics: document.getElementById("analyticsSection")
   };
 
@@ -366,53 +366,53 @@ class ProductManager {
 // ==========================================
 // 5️⃣ إدارة Tab Switching
 // ==========================================
-class TabManager {
-  constructor() {
-    this.tabs = document.querySelectorAll('.dashboard-tab');
-    this.sections = {
-      products: document.getElementById('productsSection'),
-      orders: document.getElementById('ordersSection'),
-      messages: document.getElementById('messagesSection'),
-      analytics: document.getElementById('analyticsSection')
-    };
+// class TabManager {
+//   constructor() {
+//     this.tabs = document.querySelectorAll('.dashboard-tab');
+//     this.sections = {
+//       products: document.getElementById('productsSection'),
+//       orders: document.getElementById('ordersSection'),
+//       messages: document.getElementById('messagesSection'),
+//       analytics: document.getElementById('analyticsSection')
+//     };
 
-    this.init();
-  }
+//     this.init();
+//   }
 
-  init() {
-    this.tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const tabName = tab.dataset.tab;
-        if (tabName) {
-          this.switchTab(tabName);
-        }
-      });
-    });
-  }
+//   init() {
+//     this.tabs.forEach(tab => {
+//       tab.addEventListener('click', () => {
+//         const tabName = tab.dataset.tab;
+//         if (tabName) {
+//           this.switchTab(tabName);
+//         }
+//       });
+//     });
+//   }
 
-  switchTab(tabName) {
-    // إخفاء جميع الأقسام
-    Object.values(this.sections).forEach(section => {
-      if (section) {
-        section.classList.add('hidden');
-      }
-    });
+//   switchTab(tabName) {
+//     // إخفاء جميع الأقسام
+//     Object.values(this.sections).forEach(section => {
+//       if (section) {
+//         section.classList.add('hidden');
+//       }
+//     });
 
-    // عرض القسم المختار
-    if (this.sections[tabName]) {
-      this.sections[tabName].classList.remove('hidden');
-    }
+//     // عرض القسم المختار
+//     if (this.sections[tabName]) {
+//       this.sections[tabName].classList.remove('hidden');
+//     }
 
-    // تحديث التبويب النشط
-    this.tabs.forEach(tab => {
-      if (tab.dataset.tab === tabName) {
-        tab.classList.add('active-tab');
-      } else {
-        tab.classList.remove('active-tab');
-      }
-    });
-  }
-}
+//     // تحديث التبويب النشط
+//     this.tabs.forEach(tab => {
+//       if (tab.dataset.tab === tabName) {
+//         tab.classList.add('active-tab');
+//       } else {
+//         tab.classList.remove('active-tab');
+//       }
+//     });
+//   }
+// }
 
 // ==========================================
 // 6️⃣ تهيئة التطبيق
@@ -449,40 +449,12 @@ function initializeOtherFeatures() {
   }
 
   // إدارة الرسائل (Mark as read)
-  initializeMessages();
+  // initializeMessages();
 
   // إدارة Edit Profile
   initializeEditProfile();
 }
 
-function initializeMessages() {
-  const markAllReadBtn = document.getElementById('markAllRead');
-  if (markAllReadBtn) {
-    markAllReadBtn.addEventListener('click', () => {
-      document.querySelectorAll('.mark-read:not([disabled])').forEach(btn => {
-        btn.click();
-      });
-    });
-  }
-
-  // Mark individual messages
-  document.querySelectorAll('.mark-read').forEach(btn => {
-    btn.addEventListener('click', function () {
-      if (!this.disabled) {
-        const card = this.closest('.message-card');
-        card.classList.remove('bg-[#FFF8F0]');
-        card.classList.add('bg-white');
-        card.style.borderLeft = 'none';
-
-        const badge = card.querySelector('.bg-red-100');
-        if (badge) badge.remove();
-
-        this.disabled = true;
-        this.innerHTML = '<i class="fa-regular fa-circle-check mr-1"></i>Read';
-      }
-    });
-  });
-}
 
 function initializeEditProfile() {
   const editBtn = document.getElementById('editProfileBtn');

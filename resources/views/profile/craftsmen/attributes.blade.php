@@ -1,5 +1,4 @@
 {{-- ================= ATTRIBUTES SECTION ================= --}}
-
 <div id="customFields" class="hidden ">
     <div class="space-y-6 mt-10">
         <div class="flex items-center justify-between">
@@ -19,24 +18,27 @@
                     <tr class="bg-[#f8f4f0] border-b border-[#e5d3c5]">
                         <th class="px-6 py-3 text-left text-sm font-semibold text-[#835837]">Attribute Name</th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-[#835837]">Value</th>
-                        
                         <th class="px-6 py-3 text-center text-sm font-semibold text-[#835837]">Actions</th>
                     </tr>
                 </thead>
+
                 <tbody id="attributesTableBody">
                     @forelse($product->attributes ?? [] as $attribute)
                         <tr class="border-b border-[#e5d3c5] hover:bg-[#faf8f6] transition"
-                            id="attr-row-{{ $attribute->id }}">
+                            id="attr-row-{{ $attribute->id }}" data-attribute-id="{{ $attribute->id }}">
                             <td class="px-6 py-4 text-sm text-gray-700">
-                                <span class="font-semibold">{{ $attribute->name }}</span>
+                                <span class="font-semibold attr-name">{{ $attribute->name }}</span>
                             </td>
                             <td class="px-6 py-4 text-sm">
+                                @php
+                                    $pivotValue = json_decode($attribute->pivot->value, true);
+                                @endphp
                                 <input type="text"
                                     class="attribute-value px-3 py-2 border border-[#e5d3c5] rounded-md focus:ring-2 focus:ring-[#c8a98d] outline-none w-full"
-                                    value="{{ $attribute->pivot->value ?? '' }}"
-                                    data-attribute-id="{{ $attribute->id }}" placeholder="Enter value">
+                                    value="{{ $pivotValue['value'] ?? '' }}"
+                                    data-attribute-id="{{ $attribute->id }}" placeholder="Enter value"
+                                    onchange="updateAttribute({{ $attribute->id }}, this.value)">
                             </td>
-                            
                             <td class="px-6 py-4 text-center">
                                 <button type="button" onclick="removeAttribute({{ $attribute->id }})"
                                     class="text-red-600 hover:text-red-800 transition font-semibold text-sm">
@@ -46,7 +48,7 @@
                         </tr>
                     @empty
                         <tr id="emptyAttributeRow">
-                            <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                            <td colspan="3" class="px-6 py-8 text-center text-gray-500">
                                 <div class="flex flex-col items-center gap-2">
                                     <i class="fa-solid fa-inbox text-2xl text-gray-300"></i>
                                     <p>No attributes added yet</p>
@@ -61,6 +63,15 @@
 
         {{-- Hidden input for storing attribute data --}}
         <input type="hidden" id="productAttributes" name="product_attributes">
+    </div>
+    <div class="mt-4">
+        <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="allow_engraving" value="1" @checked(old('allow_engraving', $product->allow_engraving ?? 0)) class="w-5 h-5">
+
+            <span class="text-[#835837] font-medium">
+                Allow engraving on this product
+            </span>
+        </label>
     </div>
 
     {{-- MODAL: Add Attribute --}}
@@ -77,7 +88,6 @@
                 {{-- Select Attribute --}}
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Enter Attribute</label>
-
 
                     <select id="attributeSelect" name="name"
                         class="w-full px-3 py-2 border border-[#e5d3c5] rounded-md focus:ring-2 focus:ring-[#c8a98d] outline-none">
@@ -117,193 +127,7 @@
 </div>
 
 
-<script>
-  let productAttributes = {};
 
-// تهيئة الخصائص من البيانات الموجودة (للتعديل)
-function initializeAttributes() {
-    const existingRows = document.querySelectorAll('#attributesTableBody tr:not(#emptyAttributeRow)');
-    existingRows.forEach(row => {
-        const id = row.dataset.attributeId;
-        const name = row.querySelector('.attr-name')?.textContent;
-        const value = row.querySelector('.attr-value-input')?.value;
-        
-        if (id && name && value) {
-            productAttributes[id] = { name, value };
-        }
-    });
-    
-    // تحديث hidden input
-    document.getElementById('productAttributes').value = JSON.stringify(productAttributes);
-}
-
-function openAttributeModal() {
-    document.getElementById('attributeModal').classList.remove('hidden');
-    document.getElementById('attrError').classList.add('hidden');
-}
-
-function closeAttributeModal() {
-    document.getElementById('attributeModal').classList.add('hidden');
-    // تنظيف الحقول
-    document.getElementById('attributeSelect').value = '';
-    document.getElementById('attributeValue').value = '';
-    document.getElementById('attrError').classList.add('hidden');
-}
-
-function addAttribute() {
-    let select = document.getElementById('attributeSelect');
-    let valueInput = document.getElementById('attributeValue');
-    let errorEl = document.getElementById('attrError');
-
-    let id = select.value;
-    let name = select.options[select.selectedIndex]?.text || '';
-    let value = valueInput.value.trim();
-
-    // التحقق من صحة البيانات
-    if (!id) {
-        errorEl.textContent = '⚠️ Please select an attribute';
-        errorEl.classList.remove('hidden');
-        return;
-    }
-
-    if (!value) {
-        errorEl.textContent = '⚠️ Please enter a value';
-        errorEl.classList.remove('hidden');
-        return;
-    }
-
-    // التحقق من عدم التكرار
-    if (productAttributes[id]) {
-        errorEl.textContent = '⚠️ This attribute is already added';
-        errorEl.classList.remove('hidden');
-        return;
-    }
-
-    // إخفاء الخطأ
-    errorEl.classList.add('hidden');
-
-    // تخزين في الـ state
-    productAttributes[id] = {
-        name: name,
-        value: value
-    };
-
-    // تحديث hidden input
-    document.getElementById('productAttributes').value = JSON.stringify(productAttributes);
-
-    // إضافة للجدول
-    addRowToTable(id, name, value);
-
-    // تنظيف الحقول وإغلاق المودال
-    valueInput.value = '';
-    select.value = '';
-    closeAttributeModal();
-}
-
-function addRowToTable(id, name, value) {
-    let tbody = document.getElementById('attributesTableBody');
-
-    // حذف رسالة "لا يوجد بيانات"
-    let empty = document.getElementById('emptyAttributeRow');
-    if (empty) empty.remove();
-
-    // التحقق من عدم وجود الصف مسبقاً
-    let existingRow = document.getElementById(`attr-row-${id}`);
-    if (existingRow) {
-        // تحديث القيمة بدلاً من إضافة صف جديد
-        existingRow.querySelector('.attr-value-display').textContent = value;
-        return;
-    }
-
-    let row = document.createElement('tr');
-    row.id = `attr-row-${id}`;
-    row.className = 'border-b border-[#e5d3c5] hover:bg-[#faf8f6] transition';
-    row.dataset.attributeId = id;
-
-    row.innerHTML = `
-        <td class="px-6 py-4 text-sm text-gray-700">
-            <span class="font-semibold attr-name">${escapeHtml(name)}</span>
-        </td>
-        <td class="px-6 py-4 text-sm">
-            <span class="attr-value-display">${escapeHtml(value)}</span>
-            <input type="hidden" class="attr-value-input" value="${escapeHtml(value)}">
-        </td>
-        <td class="px-6 py-4 text-center">
-            <button type="button" onclick="removeAttribute(${id})"
-                class="text-red-600 hover:text-red-800 transition font-semibold text-sm">
-                <i class="fa-solid fa-trash"></i> Remove
-            </button>
-        </td>
-    `;
-
-    tbody.appendChild(row);
-}
-
-function removeAttribute(id) {
-    // حذف من الـ state
-    delete productAttributes[id];
-
-    // تحديث hidden input
-    document.getElementById('productAttributes').value = JSON.stringify(productAttributes);
-
-    // حذف من الجدول
-    let row = document.getElementById(`attr-row-${id}`);
-    if (row) row.remove();
-
-    // إذا لم يبقى أي صف، أضف رسالة "لا يوجد بيانات"
-    let tbody = document.getElementById('attributesTableBody');
-    if (tbody.children.length === 0) {
-        tbody.innerHTML = `
-            <tr id="emptyAttributeRow">
-                <td colspan="3" class="px-6 py-8 text-center text-gray-500">
-                    <div class="flex flex-col items-center gap-2">
-                        <i class="fa-solid fa-inbox text-2xl text-gray-300"></i>
-                        <p>No attributes added yet</p>
-                        <p class="text-xs text-gray-400">Add your first attribute to get started</p>
-                    </div>
-                </td>
-            </tr>
-        `;
-    }
-}
-
-// دالة مساعدة لتجنب XSS
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-// تهيئة عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', function() {
-    // إذا كانت هناك خصائص موجودة (في حالة التعديل)
-    const existingAttributes = document.querySelectorAll('#attributesTableBody tr:not(#emptyAttributeRow)');
-    if (existingAttributes.length > 0) {
-        existingAttributes.forEach(row => {
-            const id = row.dataset.attributeId;
-            const name = row.querySelector('.attr-name')?.textContent;
-            const value = row.querySelector('.attr-value-input')?.value;
-            
-            if (id && name && value) {
-                productAttributes[id] = { name, value };
-            }
-        });
-        
-        // تحديث hidden input
-        document.getElementById('productAttributes').value = JSON.stringify(productAttributes);
-    }
-});
-
-// إغلاق المودال عند الضغط خارجها
-document.addEventListener('click', function(event) {
-    const modal = document.getElementById('attributeModal');
-    const modalContent = modal?.querySelector('.bg-white');
-    if (event.target === modal && modalContent) {
-        closeAttributeModal();
-    }
-});
-</script>
 <style>
     #attributeModal {
         animation: slideIn 0.3s ease-out;
