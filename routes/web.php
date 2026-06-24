@@ -14,6 +14,8 @@ use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\OrderController;
 use App\Http\Controllers\Site\ReviewController;
 use App\Http\Controllers\Site\StripeController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 Route::name('frontend.')->group(function () {
     // Route::resource('profile', ProfileController::class);
@@ -53,6 +55,36 @@ Route::middleware(['auth'])->group(function () {
     Route::post('notifications/{notification}/mark-read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
     Route::delete('notifications/{notification}', [NotificationController::class, 'delete'])->name('notifications.delete');
     Route::post('notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    Route::get('/dashboard', function () {
+        $user = Auth::user();
+        if ($user->hasRole('client')) {
+            return redirect()->route('client.profile.edit');
+        } elseif ($user->hasRole('craftsmen')) {
+            return redirect()->route('craftsmen.profile.index');
+        }
+        return view('dashboard');
+    })->name('dashboard');
+    Route::get('/profile', function () {
+        $user = Auth::user();
+        if ($user->hasRole('client')) {
+            return redirect()->route('client.profile.edit');
+        }
+        abort(404);
+    });
+    Route::patch('/profile', function (Request $request) {
+        $user = Auth::user();
+        if ($user->hasRole('client')) {
+            return redirect()->route('client.profile.update');
+        }
+        abort(404);
+    });
+    Route::delete('/profile', function (Request $request) {
+        $user = Auth::user();
+        if ($user->hasRole('client')) {
+            return redirect()->route('client.profile.destroy');
+        }
+        abort(404);
+    });
 
 
     // profile  clint

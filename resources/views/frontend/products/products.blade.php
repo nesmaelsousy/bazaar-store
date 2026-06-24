@@ -17,7 +17,7 @@
                                 <option value="all">All</option>
 
                                 @foreach ($categories as $value => $category)
-                                    <option value="{{ $value }}"> {{ $category->name }}</option>
+                                    <option value="{{ $value }}"> {{ $category }}</option>
                                 @endforeach
                             </select>
 
@@ -59,48 +59,58 @@
                                 class="w-1/2 p-1 text-sm text-[#835837] border outline-none rounded-lg focus:ring-1 focus:ring-[#c8a98d]"
                                 value="{{ old('maxPrice', request('maxPrice')) }}" min="0" max="1000">
                         </div>
-                        
+
                     </div>
 
 
 
 
-                    <div class="flex-1 flex flex-col">
-                        <div class="text-center mb-6 w-full max-w-2xl mx-auto md:translate-x-[-110px]">
-                            <h2 class="text-3xl font-bold text-[#835837] mb-2">Browse Products</h2>
-                            <p class="text-[#9A7F73] capitalize">Discover our unique collection of handmade products.</p>
+                    <div class="flex-1 flex flex-col items-center">
+
+                        <!-- Title -->
+                        <div class="text-center mb-6 w-full max-w-2xl">
+                            <h2 class="text-3xl font-bold text-[#835837] mb-2">
+                                Browse Products
+                            </h2>
+                            <p class="text-[#9A7F73] capitalize">
+                                Discover our unique collection of handmade products.
+                            </p>
                         </div>
 
-                        <div class="flex items-center mb-6 w-full max-w-3xl mx-auto">
-                            <div class="flex-1"></div>
-                            <form action="" class="relative w-full max-w-md">
-                                <div class="">
+                        <!-- Search + Sort -->
+                        <div class="w-full max-w-4xl flex flex-col md:flex-row items-center gap-4 mb-6">
 
-                                    <input id="searchInput" type="text" name="title" placeholder="Product Search"
-                                        class="w-full pl-9 p-2 border outline-none rounded-lg focus:ring-2 focus:ring-[#c8a98d]"
-                                        value="{{ old('title', request('title')) }}">
-                                    <i
-                                        class="fa-solid fa-magnifying-glass absolute top-1/2 left-3 -translate-y-1/2 text-[#9A7F73]"></i>
-                                </div>
+                            <!-- Search -->
+                            <form action="{{ URL::current() }}" class="relative w-full md:flex-1">
+                                <input id="searchInput" type="text" name="title" placeholder="Product Search"
+                                    value="{{ old('title', request('title')) }}"
+                                    class="w-full pl-9 p-2 border outline-none rounded-lg focus:ring-2 focus:ring-[#c8a98d]">
+                                <i
+                                    class="fa-solid fa-magnifying-glass absolute top-1/2 left-3 -translate-y-1/2 text-[#9A7F73]"></i>
                             </form>
 
-
-                            <div class="flex flex-1 justify-end items-center gap-3 ml-4">
+                            <!-- Sort + Count -->
+                            <div class="flex items-center gap-3">
                                 <span id="countText" class="text-sm text-[#9A7F73] whitespace-nowrap"></span>
-                                <div class="relative">
-                                    <select id="sortSelect"
-                                        class="appearance-none pl-3 pr-8 py-2 text-sm text-[#835837] border rounded-lg">
-                                        <option value="newest">Newest</option>
-                                        <option value="low-high">Price Low → High</option>
-                                        <option value="high-low">Price High → Low</option>
-                                    </select>
-                                </div>
-                                </form>
+
+                                <select id="sortSelect"
+                                    class="appearance-none px-3 py-2 text-sm text-[#835837] border rounded-lg">
+                                    <option value="newest">Newest</option>
+                                    <option value="low-high">Price Low → High</option>
+                                    <option value="high-low">Price High → Low</option>
+                                </select>
                             </div>
                         </div>
 
-                        @include('frontend.products.partials.product-grid', ['products' => $products])
-                        {{ $products->links() }}
+                        <!-- Products -->
+                        <div class="w-full max-w-6xl">
+                            @include('frontend.products.partials.product-grid', ['products' => $products])
+
+                            <div class="mt-6">
+                                {{ $products->links() }}
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

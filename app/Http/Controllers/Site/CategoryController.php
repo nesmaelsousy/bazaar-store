@@ -26,8 +26,7 @@ class CategoryController extends Controller
             ->paginate(10);
         $sellers = User::where('status', 'active')->where('role', 'craftsmen')->pluck('name', 'id')->toArray();
         $addresses =  User::where('status', 'active')->where('role', 'craftsmen')->pluck('address', 'id')->toArray();
-        $categories = Category::all();
-        return view(
+        $categories = Category::all();  $categories = Category::where('status', 'active')->pluck('name', 'id')->toArray(); return view(
             'frontend.products.products',
             compact('category', 'products', 'categories', 'sellers', 'addresses')
         );

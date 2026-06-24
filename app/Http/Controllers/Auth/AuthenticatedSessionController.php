@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\cart;
+use App\Models\Cart;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\RedirectResponse;
@@ -30,10 +30,34 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-        
+        $cookieId = Cookie::get('cart_id');
 
+        if ($cookieId) {
 
-         return redirect()->intended(route('frontend.index'));;
+            $guestItems = Cart::where('cookie_id', $cookieId)->get();
+
+            foreach ($guestItems as $item) {
+
+                $existing = Cart::where('user_id', auth()->id())
+                    ->where('product_id', $item->product_id)
+                    ->first();
+
+                if ($existing) {
+                    $existing->quantity += $item->quantity;
+                    $existing->save();
+
+                    $item->delete();
+                } else {
+                    $item->user_id = auth()->id();
+                    $item->cookie_id = null;
+                    $item->save();
+                }
+            }
+
+            Cookie::queue(Cookie::forget('cart_id'));
+        }
+
+        return redirect()->intended(route('dashboard'));
     }
 
     /**
@@ -46,6 +70,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect('/');
     }
 }

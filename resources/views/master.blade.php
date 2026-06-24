@@ -8,7 +8,7 @@
     <title>@yield('title', 'Bazaar Store')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
+
 
     @vite(['resources/css/app.css'])
     @stack('css')
@@ -49,8 +49,10 @@
                 <div class="flex items-center gap-3 md:gap-5 shrink-0">
                     <button id="menu-btn" class="md:hidden text-xl text-[#875E43]">
                         <i id="menu-icon" class="fa-solid fa-bars"></i></button>
+                    @auth
+                        @include('components.notification-bell-blade')
+                    @endauth
 
-                    @include('components.notification-bell-blade')
 
 
                     <a href="{{ route('frontend.cart.index') }}"
@@ -153,7 +155,8 @@
                     <li><a href="{{ route('frontend.about') }}" class="hover:text-white"><i
                                 class="fa-solid fa-chevron-right"></i> About
                             Us</a></li>
-                    <li><a href="{{ route('frontend.contact') }}" class="hover:text-white"><i class="fa-solid fa-chevron-right"></i>
+                    <li><a href="{{ route('frontend.contact') }}" class="hover:text-white"><i
+                                class="fa-solid fa-chevron-right"></i>
                             Contact</a></li>
                 </ul>
             </div>

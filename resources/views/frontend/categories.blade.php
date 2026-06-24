@@ -27,27 +27,18 @@
                         <a href="{{ route('frontend.categories.products', $category->id) }}"
                             data-name="{{ $category->name }}"
                             class="category block bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-                            {{-- {{ dd($category->image) }} --}}
-                            <img src="{{ asset('storage/' . $category->image) }}" class="w-full h-44 object-cover">
+
+                            <img src="{{ optional($category)->image ? Storage::url($category->image) : asset('backend/image/image-placeholder.png') }}"
+                              class="w-full h-44 object-cover" alt="">
                             <div class="p-3">
                                 <h3 class="font-bold text-[#835837] mb-1">{{ $category->name }}</h3>
                                 <p class="text-xs text-[#9A7F73] mb-2">{{ $category->description }}</p>
-                                {{-- <div class="text-yellow-500 text-sm mb-2">
-                                 <i class="fa-solid fa-star"></i>
-                                 <span class="text-[#835837]">4.7</span>
-                             </div> --}}
+
                                 <span class="font-bold text-[#835837]">Starts From:
                                     {{ number_format($maxPrice, 2) }}</span>
                             </div>
                         </a>
-                        {{-- <a href="products.html?category={{ $category->id }}" data-name="{{ $category->name }}"
-                            class="category block bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-                            <img src="{{ $category->image }}" class="w-full h-44 object-cover">
-                            <div class="p-3">
-                                <h3 class="font-bold text-[#835837] mb-1">{{ $category->name }}</h3>
-                                <p class="text-xs text-[#9A7F73] mb-2">{{ $category->description }}</p>
-                            </div>
-                        </a>` --}}
+
                     @empty
                         <div class="col-span-full flex flex-col items-center justify-center min-h-64 text-center">
                             <div class="text-6xl mb-4 text-[#835837] opacity-50">

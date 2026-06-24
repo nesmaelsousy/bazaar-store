@@ -5,7 +5,7 @@
 
 
     <button @click="isOpen = !isOpen"
-        class="relative p-2 text-[#875E43] hover:text-[#E6B693]rounded-lg transition-colors duration-200 {{ request()->routeIs('login') ? 'hidden' : '' }}">
+        class="relative p-2 text-[#875E43] hover:text-[#E6B693]rounded-lg transition-colors duration-200 ">
         <i class="fa-solid fa-bell text-xl"></i>
 
 

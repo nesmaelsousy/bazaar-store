@@ -16,9 +16,9 @@
             <tr>
                 <td>{{ $loop->iteration  }}</td>
 
-                <td><img class="rounded-circle" src="{{ asset($category->image ? 
-                    'storage/' . $category->image:'backend/image/avatar.jpg') }}" width="50"
-                        height="50"> </td>
+                <td><img class="rounded" src="{{ asset($category->image ? 
+                    'storage/' . $category->image:'backend/image/avatar.jpg') }}" width="100"
+                        height="100"> </td>
                 <td>{{ $category->name }}</td>
                 <td>
                     <span

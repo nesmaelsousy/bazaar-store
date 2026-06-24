@@ -32,8 +32,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-      
-       $data = $request->validate([
+        $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:255'],
@@ -42,15 +41,18 @@ class RegisteredUserController extends Controller
             'address' => ['required', 'string', 'max:255'],
             'role' => ['required', 'string', 'max:255'],
         ]);
-      //  dd($data);
-      $data['slug']= Str::slug($data['name']);
+
+        $data['slug'] = Str::slug($data['name']);
 
         $user = User::create($data);
 
-        event(new Registered($user));
+
+     
 
         Auth::login($user);
 
-        return redirect(route('frontend.index', absolute: false));
+        $request->session()->regenerate();
+
+        return redirect()->route('dashboard');
     }
 }

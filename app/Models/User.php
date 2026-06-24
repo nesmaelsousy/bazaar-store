@@ -10,18 +10,18 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Guarded;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Order;
 use App\Models\Cart;
-use Spatie\Permission\Traits\HasRoles;
 
 // #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable;
     protected $fillable = [
         'name',
         'slug',
@@ -92,8 +92,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(favorite::class);
     }
+    protected static function boot()
+{
+    parent::boot();
+
+    static::creating(function ($user) {
+        $user->slug = Str::slug($user->name);
+    });
+}
     public function hasRole(string $roleName): bool
-    {
-        return $this->role === $roleName;
-    }
+{
+    return $this->role === $roleName;
+}
 }
