@@ -16,7 +16,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ProductController extends Controller
 {
-    use AuthorizesRequests;  
+    use AuthorizesRequests;
     use ProductManageable;
     use UploadableImage;
     /**
@@ -37,29 +37,28 @@ class ProductController extends Controller
     {
         $product = new Product();
         $sellers = User::where('status', 'active')
-        ->where('role','craftsmen')->pluck('name','id')->toArray();
-        $categories = Category::where('status', 'active')->pluck('name','id')->toArray();
-        return view('dashboard.products.add', compact('product','sellers',  'categories'));
+            ->where('role', 'craftsmen')->pluck('name', 'id')->toArray();
+        $categories = Category::where('status', 'active')->pluck('name', 'id')->toArray();
+        return view('dashboard.products.add', compact('product', 'sellers',  'categories'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-  public function store(productRequest $request)
-  {
-    $this->authorize('create', Product::class);
-    
-    $data = $request->validated();
-     if ($request->hasFile('image')) {
-      $data['image'] = $this->uploadImage($request,'products');
-    
-    }
+    public function store(productRequest $request)
+    {
+        $this->authorize('create', Product::class);
 
-    $this->createProductWithSlug($data);
-
-   
-    return redirect()->route('admin.product.index');
+        $data = $request->validated();
+        if ($request->hasFile('image')) {
+            $data['image'] = $this->uploadImage($request, 'products');
         }
+
+        $this->createProductWithSlug($data);
+
+
+        return redirect()->route('admin.product.index');
+    }
 
     /**
      * Display the specified resource.
@@ -71,10 +70,12 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-   
-        $users = User::where('status','active')->pluck('name','id')->toArray();
-        $categories = Category::where('status', 'active')->pluck('name','id')->toArray();
-        return view('dashboard.products.edit', compact('product', 'categories','users'));
+
+        // $users = User::where('status', 'active')->pluck('name', 'id')->toArray();
+        $sellers = User::where('status', 'active')
+            ->where('role', 'craftsmen')->pluck('name', 'id')->toArray();
+        $categories = Category::where('status', 'active')->pluck('name', 'id')->toArray();
+        return view('dashboard.products.edit', compact('product', 'categories', 'sellers'));
     }
 
     /**
@@ -85,7 +86,7 @@ class ProductController extends Controller
         $this->authorize('update', $product);
         $data = $request->except('image', 'modal_type');
         $currentImage = $product->image;
-        $data['image']= $this->updateImage($request, $currentImage,'products');
+        $data['image'] = $this->updateImage($request, $currentImage, 'products');
 
         try {
             $product->update($data);
@@ -100,13 +101,12 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-         $this->authorize('delete', $product);
+        $this->authorize('delete', $product);
         $product->delete();
         $imagePath = $product->image;
         //delete image
         $this->deleteOldImage($imagePath);
-       
+
         return redirect()->route('admin.product.index');
     }
-    
 }

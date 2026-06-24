@@ -53,10 +53,10 @@
             <div class="text-left">
                 <label class="block text-md font-medium text-[#835837] mb-1">User Type <span class="text-red-500">*</span></label>
                 <div class="relative">
-                    <select name="userType" class="appearance-none w-full px-3 py-2 text-[#835837] border border-[#e5d3c5] rounded-lg outline-none cursor-pointer focus:ring-2 focus:ring-[#c8a98d]" required>
+                    <select name="role" class="appearance-none w-full px-3 py-2 text-[#835837] border border-[#e5d3c5] rounded-lg outline-none cursor-pointer focus:ring-2 focus:ring-[#c8a98d]" required>
                         <option value="" disabled selected>Select....</option>
-                        <option value="artisan">Artisan</option>
-                        <option value="customer">Customer</option>
+                        <option value="craftsmen">Artisan</option>
+                        <option value="client">Customer</option>
                     </select>
                     <x-input-error :messages="$errors->get('userType')" class="mt-2" />
                     <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none"><i class="fa-solid fa-chevron-down text-[#835837] text-sm"></i></div>

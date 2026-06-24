@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers\Dashboard\User;
 
+use App\Events\UserCreated;
+use App\Http\Controllers\Controller;
 use App\Mail\UserCreatedMail;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Http\Controllers\Controller;
-use Flasher\Laravel\Facade\Flasher;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\User\UserRequest;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
-class UserController extends Controller
+class CraftsmenController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,9 +20,9 @@ class UserController extends Controller
     {
         $query = $request->query();
 
-        $users = User::Filter($query)->paginate(5);
+        $users = User::where('role', 'craftsmen')->Filter($query)->paginate(5);
 
-        return view('dashboard.users.index', compact('users'));
+        return view('dashboard.craftsmen.index', compact('users'));
     }
 
     /**
@@ -32,48 +30,61 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('dashboard.users.add');
+        return view('dashboard.craftsmen.add');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserRequest $request)
+    public function store(Request $request)
     {
         $data = $request->validated();
 
         $data['username'] = Str::random() . rand();
         $data['slug'] = Str::slug($data['name']) . '-' . rand(1000, 9999);
         $data['password'] = Hash::make(Str::random());
-
+        //send password to user email
+        Mail::to($data['email'])->send(new UserCreatedMail($data));
 
         if ($request->hasFile('image')) {
             $data['image'] = User::UploadImage($request, 'user');
         }
         //dd($request->all());
-        $user = User::create($data);
-
-        \Illuminate\Support\Facades\Password::sendResetLink([
-            'email' => $user->email
-        ]);
-
+        User::create($data);
         return redirect()->route('admin.user.index');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(User $artisan)
     {
-        return view('dashboard.users.edit', compact('user'));
+        return view('dashboard.craftsmen.edit', compact('artisan'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, User $user)
+    public function update(Request $request, User $artisan)
     {
-        $data = $request->validated();
+        $data = $request->validat([
+            "name" => "required|string|max:255",
+            "username" => "required|string|max:255",
+            "phone" => "required|string|max:20",
+            "address" => "required|string|max:255",
+            "email" => "required|email",
+            "password" => "nullable|min:6",
+            "image" => "nullable|image|max:2048",
+            "role" => "required",
+        ]);
 
         // صورة جديدة
         if ($request->hasFile('image')) {
@@ -96,17 +107,8 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(string $id)
     {
-        // حذف الصورة
-        if ($user->image && Storage::disk('public')->exists($user->image)) {
-            Storage::disk('public')->delete($user->image);
-        }
-
-        $user->delete();
-
-        Flasher::success('User deleted successfully');
-
-        return redirect()->back();
+        //
     }
 }

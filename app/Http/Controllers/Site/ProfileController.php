@@ -1,65 +1,78 @@
 <?php
 
 namespace App\Http\Controllers\Site;
-
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Order;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display the user's profile form.
      */
-    public function index()
+    public function edit(Request $request): View
     {
-        return view('frontend.profile.profile-customer');
+        $user = auth()->user();
+       $orders = Order::with('orderItems.product')->where('user_id', auth()->id())->latest()->get();
+        return view('profile.client.profile-client', [
+            'user' => $request->user(),
+            'orders'=>$orders
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Update the user's profile information.
      */
-    public function create()
+    public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        //
+        $request->user()->fill($request->validated());
+
+        if ($request->user()->isDirty('email')) {
+            $request->user()->email_verified_at = null;
+        }
+
+        if ($request->hasFile('image')) {
+            if (Auth::user()->image) {
+                // Delete old image
+                $oldImagePath = public_path('storage/' . Auth::user()->image);
+                if (file_exists($oldImagePath)) {
+                    // delete the old image file
+                    Storage::disk('public')->delete(Auth::user()->image);
+                }
+            }
+            $imagePath = $request->file('image')->store('user', 'public');
+            $request->user()->image = $imagePath;
+        }
+
+        $request->user()->save();
+
+        return Redirect::route('client.profile.edit')->with('status', 'profile-updated');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Delete the user's account.
      */
-    public function store(Request $request)
+    public function destroy(Request $request): RedirectResponse
     {
-        //
-    }
+        $request->validateWithBag('userDeletion', [
+            'password' => ['required', 'current_password'],
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $user = $request->user();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        Auth::logout();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        $user->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return Redirect::to('/');
     }
 }

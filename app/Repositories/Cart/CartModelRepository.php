@@ -50,8 +50,8 @@ class CartModelRepository implements CartRepository
             // check stock
             if ($currentQty + $quantity > $product->stock_quantity) {
                 throw new \Exception(
-                    "Cannot add more than available stock. Remaining: " .
-                        ($product->stock_quantity - $currentQty)
+                    " Sorry, you cannot add more than the available stock; we are out of stock! " 
+                        
                 );
             }
 
@@ -91,7 +91,7 @@ class CartModelRepository implements CartRepository
             $product = $cartItem->product;
             if ($quantity > $product->stock_quantity) {
                 throw new \Exception(
-                    "Cannot add more than available stock. Remaining: {$product->stock_quantity}"
+                    "Sorry, you cannot add more than the available stock; we are out of stock!"
                 );
             }
             $updateData = ['quantity' => $quantity];

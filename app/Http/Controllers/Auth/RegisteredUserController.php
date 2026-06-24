@@ -40,7 +40,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'address' => ['required', 'string', 'max:255'],
-            'userType' => ['required', 'string', 'max:255'],
+            'role' => ['required', 'string', 'max:255'],
         ]);
       //  dd($data);
       $data['slug']= Str::slug($data['name']);

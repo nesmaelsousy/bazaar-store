@@ -10,7 +10,9 @@
 
         <!-- User Panel -->
         <div class="user-panel mt-3 pb-3 mb-3 text-center">
-         <a href="{{ route('frontend.index') }}"><h5 class="text-white " >Bazaar Store</h5></a>  
+            <a href="{{ route('frontend.index') }}">
+                <h5 class="text-white ">Bazaar Store</h5>
+            </a>
         </div>
 
 
@@ -48,12 +50,30 @@
                                 <p>Add User</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Roles & Permissions</p>
                             </a>
+                        </li> --}}
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview {{ Route::is('admin.craftsmen.*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-user"></i>
+
+                        <p>Craftsmen <i class="right fas fa-angle-left"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.craftsmen.index') }}"
+                                class="nav-link {{ Route::is('admin.craftsmen.index') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>All craftsmen</p>
+                            </a>
                         </li>
+                       
+
                     </ul>
                 </li>
 
@@ -79,7 +99,7 @@
                         </li>
                     </ul>
                 </li>
-               
+
                 <!-- Products -->
                 <li class="nav-item has-treeview {{ Route::is('admin.product.*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link">
@@ -135,7 +155,7 @@
                 </li>
                 <li class="nav-item has-treeview {{ Route::is('admin.workshop.*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link">
-                      <i class="fas fa-industry"></i>
+                        <i class="fas fa-industry"></i>
                         <p>Workshops <i class="right fas fa-angle-left"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
@@ -156,9 +176,9 @@
 
                     </ul>
                 </li>
-                 <li class="nav-item has-treeview {{ Route::is('admin.workshop.*') ? 'menu-open' : '' }}">
+                <li class="nav-item has-treeview {{ Route::is('admin.workshop.*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link">
-                   <i class="fas fa-tags"></i>
+                        <i class="fas fa-tags"></i>
                         <p>Attributes <i class="right fas fa-angle-left"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
@@ -206,7 +226,7 @@
                 </li>
 
 
-                
+
                 <!-- Settings -->
                 <li class="nav-item">
                     <a href="{{ route('admin.settings.index') }}" class="nav-link">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Site;
 
+use App\Events\OrderConfirmed;
 use App\Events\OrderCreated;
 use App\Models\cart;
 use Illuminate\Support\Facades\Cookie;
@@ -70,31 +71,31 @@ class CheckoutController extends Controller
         return view('frontend.checkout.index', compact('carts', 'cart'));
     }
 
-
-
     public function store(CheckoutRequest $request, CartRepository $cart)
     {
         $request->validated();
         $items = $cart->getCart();
 
-
         DB::beginTransaction();
         try {
             $groupedBySeller = $items->groupBy(function ($cartItem) {
-                return $cartItem->product->seller_id; // خذ من Product!
+                return $cartItem->product->seller_id;
             });
-            
-            //    dd($groupedBySeller);
+
+            $createdOrders = [];
+            $ordersToNotify = [];
+
             foreach ($groupedBySeller as $seller_id => $cart_items) {
                 $total = $cart_items->sum(function ($item) {
                     return $item->product->price * $item->quantity;
                 });
+
                 $order = Order::create([
                     'user_id' => auth()->id(),
                     'seller_id' => $seller_id,
                     'total_price' => $total,
                     'payment_method' => 'code',
-                    'status'=>'pending',
+                    'status' => 'pending',
                     'number' => Order::getNextOrderNumber(),
                 ]);
 
@@ -109,8 +110,7 @@ class CheckoutController extends Controller
                         'engraving' => $item->engraving ?? null,
                     ]);
                 }
-                // بيانات الكلاينت في جدول الاوردر ادرسس
-                // dd($request->all());
+
                 $order->address()->create([
                     'fullname' => $request->fullname,
                     'phone' => $request->phone,
@@ -123,49 +123,29 @@ class CheckoutController extends Controller
                     'floor' => $request->floor,
                     'apartment' => $request->apartment,
                 ]);
+
+
+                $ordersToNotify[] = $order;
+                $createdOrders[] = $order;
             }
+
             $cart->clearCart();
+
             event(new OrderCreated($items));
 
 
             DB::commit();
+
+
+            foreach ($ordersToNotify as $order) {
+                event(new OrderConfirmed($order));
+            }
         } catch (Throwable $e) {
             DB::rollBack();
+
             throw $e;
         }
-        return redirect()->route('frontend.payment.create', $order->id);
-    }
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+      
+        return redirect()->route('frontend.payment.create', $createdOrders[0]->id);
     }
 }

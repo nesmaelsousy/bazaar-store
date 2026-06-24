@@ -11,6 +11,7 @@ use App\Http\Controllers\Dashboard\Admin\ProfileController;
 use App\Http\Controllers\Dashboard\Admin\SettingController;
 use App\Http\Controllers\Dashboard\AttributeController;
 use App\Http\Controllers\Dashboard\ContactController;
+use App\Http\Controllers\Dashboard\User\CraftsmenController;
 use App\Http\Controllers\Dashboard\User\UserController;
 
 // // Admin routes
@@ -33,6 +34,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
 
         Route::resource('user', UserController::class);
+        Route::resource('craftsmen', CraftsmenController::class);
         Route::resource('product', ProductController::class);
         Route::resource('category', CategoryController::class);
         Route::resource('attribute', AttributeController::class)->except('show');

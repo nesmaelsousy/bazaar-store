@@ -22,7 +22,7 @@ class ProductController extends Controller
     use ProductManageable;
     use UploadableImage;
 
-    // ================= INDEX =================
+   
     public function index(Request $request)
     {
         $products = Product::where('status', 'active')
@@ -46,7 +46,7 @@ class ProductController extends Controller
         ));
     }
 
-    // ================= CREATE =================
+   
     public function create()
     {
         $product = new Product();
@@ -60,7 +60,7 @@ class ProductController extends Controller
         ));
     }
 
-    // ================= STORE =================
+   
     public function store(ProductRequest $request)
     {
         $this->authorize('create', Product::class);
@@ -70,7 +70,7 @@ class ProductController extends Controller
         try {
             // dd($request->product_attributes);
 
-            // ================= IMAGES =================
+            // image
             $data['images'] = $request->hasFile('images')
                 ? $this->storeImages($request->file('images'))
                 : [];
@@ -81,10 +81,10 @@ class ProductController extends Controller
                 $data['image'] = $this->uploadImage($request, 'products');
             }
 
-            // ================= CREATE PRODUCT =================
+            // create product
             $product = $this->createProductWithSlug($data);
 
-            // ================= ATTRIBUTES =================
+            // attribute
             $this->syncAttributes($request, $product);
         } catch (Throwable $e) {
             return redirect()->back()->withErrors($e->getMessage());
@@ -94,7 +94,7 @@ class ProductController extends Controller
             ->with('success', 'Product created successfully');
     }
 
-    // ================= SHOW =================
+ 
     public function show(Product $product)
     {
         $product->load('attributes');
@@ -104,7 +104,6 @@ class ProductController extends Controller
 
 
 
-    // ================= EDIT =================
     public function edit(Product $product)
     {
         $categories = Category::where('status', 'active')->pluck('name', 'id')->toArray();
@@ -113,7 +112,6 @@ class ProductController extends Controller
         return view('profile.craftsmen.edit', compact('product', 'categories', 'attributes'));
     }
 
-    // ================= UPDATE =================
     public function update(productRequest $request, Product $product)
     {
         $this->authorize('update', $product);
@@ -187,7 +185,6 @@ class ProductController extends Controller
             ->with('error', 'The product has been removed.');
     }
 
-    // ================= STORE IMAGES =================
     private function storeImages($images)
     {
         $paths = [];
@@ -231,7 +228,7 @@ class ProductController extends Controller
 
         $product->attributes()->sync($pivot);
     }
-    // ================= FAVORITES =================
+    // fav
     public function addToFavorites(Request $request, Product $product)
     {
         $user = auth()->user();

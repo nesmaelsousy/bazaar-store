@@ -238,7 +238,7 @@
         {{-- Header --}}
         <div class="d-flex align-items-center gap-3 mb-1">
             <div class="page-icon mr-3">
-                <i class="fas fa-product"></i>
+                 <i class="fas fa-box"></i>
             </div>
             <div>
                 <h2 class="page-title mb- 0">Edit a {{ $product->title }} </h2>

@@ -60,7 +60,7 @@ class DashboardController extends Controller
         $pendingOrders = Order::where('status', 'pending')->count();
 
         $recentOrders = Order::latest()
-            ->with('craftsman')
+            ->with('seller')
             ->paginate(10);
 
         return view('dashboard.index', compact(

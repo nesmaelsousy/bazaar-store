@@ -8,6 +8,7 @@
     <title>@yield('title', 'Bazaar Store')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
 
     @vite(['resources/css/app.css'])
     @stack('css')
@@ -49,13 +50,11 @@
                     <button id="menu-btn" class="md:hidden text-xl text-[#875E43]">
                         <i id="menu-icon" class="fa-solid fa-bars"></i></button>
 
-                    {{-- <a href="{{ route('frontend.favorites.index') }}" class="text-xl text-[#875E43] hover:text-[#E6B693] transition duration-300">
-                    <i class="fa-regular fa-heart"></i>
-                </a> --}}
+                    @include('components.notification-bell-blade')
 
 
                     <a href="{{ route('frontend.cart.index') }}"
-                        class="relative text-xl text-[#875E43] hover:text-[#E6B693] transition duration-300 group ">
+                        class="relative text-xl text-[#875E43] hover:text-[#E6B693] transition duration-300 group {{ request()->routeIs('login') ? 'hidden' : '' }}">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span id="cart-count"
                             class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex justify-center items-center rounded-full transition-all duration-300 group-hover:-translate-y-1">
@@ -154,7 +153,7 @@
                     <li><a href="{{ route('frontend.about') }}" class="hover:text-white"><i
                                 class="fa-solid fa-chevron-right"></i> About
                             Us</a></li>
-                    <li><a href="contact.html" class="hover:text-white"><i class="fa-solid fa-chevron-right"></i>
+                    <li><a href="{{ route('frontend.contact') }}" class="hover:text-white"><i class="fa-solid fa-chevron-right"></i>
                             Contact</a></li>
                 </ul>
             </div>
@@ -205,6 +204,7 @@
     <script src="{{ asset('frontend/js/script.js') }}"></script>
     <script src="{{ asset('frontend/js/auth.js') }}"></script>
     <script src="{{ asset('frontend/js/home-workshops.js') }}"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @stack('scripts')
 
 </body>

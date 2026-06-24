@@ -88,4 +88,5 @@ class Cart extends Model
         }
         return $cookie_id;
     }
+
 }

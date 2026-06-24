@@ -12,10 +12,12 @@ class CategoryController extends Controller
 
     public function index(Request $request)
     {
-        $categories = Category::get();
+        $categories = Category::with('products')->get();
 
-        $maxprice = Category::withMax('products', 'price')->get();
-        return view('frontend.categories', compact('categories', 'maxprice'));
+        $maxPrice = $categories->flatMap(function ($category) {
+            return $category->products;
+        })->max('price');
+        return view('frontend.categories', compact('categories', 'maxPrice'));
     }
     public function products(Request $request, $id)
     {

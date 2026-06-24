@@ -16,7 +16,7 @@ class Order extends Model
     protected $guarded = []; 
     public function seller()
     {
-        return $this->belongsTo(User::class)->withDefault(['role'=>'craftsmen']);
+        return $this->belongsTo(User::class,'seller_id');
     }
       public function user()
     {

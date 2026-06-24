@@ -18,10 +18,10 @@ class AuthController extends Controller
 
         if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('admin.dashboard')->with('success', 'تم تسجيل الدخول بنجاح');
+            return redirect()->route('admin.dashboard');
         }
 
-        return back()->withErrors(['email' => 'nnnn']);
+        return back()->withErrors(['email' => 'Invalid email address']);
     }
     public function logout(Request $request)
     {

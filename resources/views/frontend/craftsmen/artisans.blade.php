@@ -16,46 +16,37 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-10">
                     @forelse ($artisans as $artisan)
-                        <a href="{{ route('frontend.artisan.show', $artisan->id) }}"
-                            class="bg-[#EAD8CC] rounded-2xl shadow-md border border-[#e5d3c5] p-4 text-center transition duration-300 cursor-pointer hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02]">
-
+                        <a href="{{ route('frontend.artisan.show', $artisan->id) }}">
                             <div
-                                class=" bg-[#F7EEE9] flex justify-center items-center rounded-full shadow-md border-4 border-[#F4E7DD] overflow-hidden w-24 h-24 mx-auto rounded-full border-4 mb-4 ">
+                                class="bg-[#f3e6dc] rounded-2xl shadow-md overflow-hidden p-4 text-center hover:shadow-xl hover:-translate-y-1 transition duration-300">
 
-                                @if ($artisan->image)
-                                    <img src="{{ asset('storage/' . $artisan->image) }}"
-                                        class="w-full h-full object-cover rounded-full" />
-                                @else
-                                    <i class="fa-solid fa-user text-5xl text-[#9B6B4A]"></i>
-                                @endif
+                                <div
+                                    class="w-24 h-24 mx-auto mb-2 bg-[#F7EEE9] flex justify-center items-center rounded-full shadow-md border-4 border-[#F4E7DD] overflow-hidden">
 
-                            </div>
-                            <div class="bg-white p-4 rounded-xl shadow-sm">
-
-                                <h3 class="text-[#835837] font-bold mb-1">{{ $artisan->name }}</h3>
-
-                                <p class="flex justify-center items-center gap-1 text-sm text-[#835837] mb-2">
-                                    <i class="fa-solid fa-location-dot text-[#c8a98d]"></i>
-                                    {{ $artisan->address }}
-                                </p>
-
-                                <p class="text-xs text-[#9A7F73] mb-5">
-                                    {{ $artisan->bio }}
-                                </p>
-
-                                <div class="flex justify-between text-sm text-[#835837] font-medium">
-
-                                    <span class="flex items-center gap-1">
-                                        <i class="fa-solid fa-star text-yellow-500"></i>
-                                        5
-                                    </span>
-
-                                    <span>
-                                        {{ $artisan->store?->products->count() }} Products
-                                    </span>
+                                    @if ($artisan->image)
+                                        <img src="{{ asset('storage/' . $artisan->image) }}"
+                                            class="w-full h-full object-cover rounded-full" />
+                                    @else
+                                        <i class="fa-solid fa-user text-5xl text-[#9B6B4A]"></i>
+                                    @endif
 
                                 </div>
+                                <div class="bg-white p-4 rounded-xl shadow-sm h-37 flex flex-col justify-between">
+                                    <h3 class="text-base font-bold text-[#835837] mb-1">{{ $artisan->name }}</h3>
+                                    @if ($artisan->address)
+                                        <p class="flex justify-center items-center gap-1 text-sm text-[#835837] mb-2"><i
+                                                class="fa-solid fa-location-dot text-[#c8a98d]"></i>{{ $artisan->address }}
+                                        </p>
+                                    @endif
 
+                                    <p class="text-xs text-[#9A7F73] mb-5">{{ $artisan->bio }}</p>
+                                    <div class="flex justify-between text-sm text-[#835837] font-medium">
+                                        <span class="flex items-center gap-1"><i
+                                                class="fa-solid fa-star text-yellow-500"></i>{{ $artisan->product->rating ?? '0' }}
+                                        </span>
+                                        <span>{{ $artisan->product->stock_quantity ?? '0' }} Products</span>
+                                    </div>
+                                </div>
                             </div>
                         </a>
 

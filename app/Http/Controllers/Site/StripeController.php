@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Site;
 
+use App\Events\OrderCreated;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Payment;
@@ -63,7 +64,7 @@ class StripeController extends Controller
             $order->update([
                 'status' => 'processing'
             ]);
-            event('payment.created', $payment->id);
+           
             return redirect()->route('frontend.index')->with('success', 'Payment process completed successfully');
         }
         return redirect()->route('frontend.checkout.create')->with('error', 'Payment failed. Please try again.');

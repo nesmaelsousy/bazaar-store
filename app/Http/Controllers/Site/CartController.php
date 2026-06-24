@@ -19,12 +19,9 @@ class CartController extends Controller
         $this->cart = $cart;
     }
 
-    /**
-     * Display the shopping cart
-     * 
-     *  IMPROVEMENT: Don't pass entire repository to view
-     * Pass the cart data instead
-     */
+  
+     // Display the shopping cart
+     
     public function index(): View
     {
         return view('frontend.cart', [
@@ -33,15 +30,10 @@ class CartController extends Controller
         ]);
     }
 
-    /**
-     * Add a product to the cart
-     * 
-     *   IMPROVEMENTS:
-     * - Better validation with exists rule
-     * - Explicit error handling for product not found
-     * - Type hints and return types
-     * - Flashback on validation errors
-     */
+   
+     // Add a product to the cart
+     
+
     public function store(CartRequest $request): RedirectResponse
     {
         $data = $request->validated();
@@ -69,15 +61,10 @@ class CartController extends Controller
         }
     }
 
-    /**
-     * Update cart item quantity
-     * 
-     *   IMPROVEMENTS:
-     * - Validate ID format
-     * - Check quantity is actually provided
-     * - Better error messages
-     * - Return JSON response for AJAX
-     */
+   
+      //Update cart item quantity
+     
+    
     public function update(Request $request, string $id): RedirectResponse
     {
         $data = $request->validate([
@@ -106,18 +93,13 @@ class CartController extends Controller
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('error', 'Failed to update cart. Please try again.');
+                ->with('error', 'Sorry, the requested quantity exceeds the available stock');
         }
     }
 
-    /**
-     * Remove a product from the cart
-     * 
-     *  IMPROVEMENTS:
-     * - Better error handling
-     * - Confirmation message
-     * - Type hints
-     */
+    
+     // Remove a product from the cart
+   
     public function destroy(string $id): RedirectResponse
     {
         try {
@@ -139,11 +121,9 @@ class CartController extends Controller
         }
     }
 
-    /**
-     * Clear entire cart
-     * 
-     *   NEW: Explicit method to clear cart with confirmation
-     */
+  
+     // Clear entire cart
+     
     public function clear(): RedirectResponse
     {
         try {
@@ -159,11 +139,9 @@ class CartController extends Controller
         }
     }
 
-    /**
-     * Get cart data (useful for AJAX/API responses)
-     * 
-     *  NEW: Useful for modern frontend frameworks
-     */
+    
+    //  Get cart data 
+   
     public function getCartData()
     {
         return response()->json([

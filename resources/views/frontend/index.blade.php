@@ -32,7 +32,7 @@
                             <h3 class="text-base font-bold text-[#835837] mb-3">{{ $product->title }}</h3>
                             <div class="text-yellow-500 text-sm mb-2">
                                 <i class="fa-solid fa-star"></i>
-                                <span class="text-[#835837]">4.5</span>
+                                <span class="text-[#835837]">{{ $product->rating }}.5</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="font-bold text-[#835837] text-lg">${{ $product->price }}</span>
@@ -73,12 +73,25 @@
                     <a href="{{ route('frontend.artisan.show', $user->id) }}">
                         <div
                             class="bg-[#f3e6dc] rounded-2xl shadow-md overflow-hidden p-4 text-center hover:shadow-xl hover:-translate-y-1 transition duration-300">
-                            <img src="{{ $user->image ? asset('storage/' . $user->image) : asset('backend/image/avatar.jpg') }}"
-                                class="w-24 h-24 mx-auto rounded-full border-4 border-white mb-4 object-cover">
+                         
+                            <div
+                                class=" bg-[#F7EEE9] flex justify-center items-center rounded-full shadow-md border-4 border-[#F4E7DD] overflow-hidden w-24 h-24 mx-auto rounded-full border-4 mb-4 ">
+
+                                @if ($user->image)
+                                    <img src="{{ asset('storage/' . $user->image) }}"
+                                        class="w-full h-full object-cover rounded-full" />
+                                @else
+                                    <i class="fa-solid fa-user text-5xl text-[#9B6B4A]"></i>
+                                @endif
+
+                            </div>
                             <div class="bg-white p-4 rounded-xl shadow-sm">
                                 <h3 class="text-base font-bold text-[#835837] mb-1">{{ $user->name }}</h3>
-                                <p class="flex justify-center items-center gap-1 text-sm text-[#835837] mb-2"><i
-                                        class="fa-solid fa-location-dot text-[#c8a98d]"></i>{{ $user->address }}</p>
+                                @if ($user->address)
+                                    <p class="flex justify-center items-center gap-1 text-sm text-[#835837] mb-2"><i
+                                            class="fa-solid fa-location-dot text-[#c8a98d]"></i>{{ $user->address }}</p>
+                                @endif
+
                                 <p class="text-xs text-[#9A7F73] mb-5">{{ $user->bio }}</p>
                                 <div class="flex justify-between text-sm text-[#835837] font-medium">
                                     <span class="flex items-center gap-1"><i
@@ -170,8 +183,8 @@
                                 </p>
 
                                 <button type="button"
-                                        class="openContact inline-block bg-[#a05a1c] text-white text-center py-2 px-4 mt-4 rounded-lg hover:bg-[#6b3a12] transition">Contact
-                                        Us Now</button>
+                                    class="openContact inline-block bg-[#a05a1c] text-white text-center py-2 px-4 mt-4 rounded-lg hover:bg-[#6b3a12] transition">Contact
+                                    Us Now</button>
 
                             </div>
                         </div>

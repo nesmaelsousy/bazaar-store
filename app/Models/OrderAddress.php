@@ -10,5 +10,14 @@ class OrderAddress extends Model
         'order_id','fullname','phone','email','street','city','country',
         'BuildNum','district','apartment','floor'
         ];
+    
+    // public function getNameAttribute()
+    // {
+    //     return $this->fullname;
+    // }
+    //  public function getCountryAttribute()
+    // {
+    //     return $this->country;
+    // }
         
 }

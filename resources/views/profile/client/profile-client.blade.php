@@ -96,8 +96,11 @@
                                     class="group hover:bg-[#F9F5F1] transition-all duration-200 border-b border-[#F4E7DD] p-3 rounded-lg">
                                     <p class="text-xs text-[#9B6B4A] font-semibold tracking-wider uppercase">Member Since
                                     </p>
-                                    <h3 class="text-[#835837] font-medium mt-1">
-                                        {{ Auth::user()->created_at->format('d M Y') }}</h3>
+                                    @if (Auth::user()->created_at)
+                                        <h3 class="text-[#835837] font-medium mt-1">
+                                            {{ Auth::user()->created_at->format('d M Y') }}</h3>
+                                    @endif
+
                                 </div>
                                 <button onclick="openEditModal()"
                                     class="w-full mt-4 bg-[#875E43] text-white py-2.5 rounded-lg hover:bg-[#9B6B4A] transition-all duration-300 flex items-center justify-center gap-2 group">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Events\OrderCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ class OrderController extends Controller
         $sellers = User::where('role', 'craftsmen')->where('status', 'active')->pluck('name', 'id')->toArray();
         $products = Product::where('status', 'active')->first();
         $order = new Order();
+        //   event(new OrderCreated($items, $order));
         return view('dashboard.orders.add', compact('users', 'sellers', 'products', 'order'));
     }
 

@@ -216,9 +216,9 @@
                                                 <td style="padding:12px; color:#111827; font-weight:500;">
                                                     #{{ $recentOrder->number }}</td>
                                                 <td style="padding:12px; color:#374151;">
-                                                    {{ $recentOrder->address->fullname }}</td>
+                                                    {{ $recentOrder->seller->name }}</td>
                                                 <td style="padding:12px; color:#111827; font-weight:600;">
-                                                    ${{ $recentOrder->total }}</td>
+                                                    ${{ $recentOrder->total_price }}</td>
                                                 <td style="padding:12px; color:#6B7280;">{{ $recentOrder->created_at }}
                                                 </td>
                                                 <td style="padding:12px;">

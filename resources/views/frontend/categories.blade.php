@@ -37,7 +37,7 @@
                                  <span class="text-[#835837]">4.7</span>
                              </div> --}}
                                 <span class="font-bold text-[#835837]">Starts From:
-                                    ${{ number_format($category->maxprice, 2) }}</span>
+                                    {{ number_format($maxPrice, 2) }}</span>
                             </div>
                         </a>
                         {{-- <a href="products.html?category={{ $category->id }}" data-name="{{ $category->name }}"

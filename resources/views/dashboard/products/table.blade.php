@@ -7,6 +7,7 @@
                 <th>Image</th>
                 <th>category</th>
                 <th>price</th>
+                <th>Stock Quantity</th>
                 <th>status</th>
                 <th>customizable</th>
                 <th>change</th>
@@ -25,6 +26,7 @@
                 <td>{{ $product->category->name }}</td>
 
                 <td>{{ $product->price }}</td>
+                <td>{{ $product->stock_quantity }}</td>
 
                 <td>
                     <span
@@ -53,7 +55,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="8" class="text-center">No products found</td>
+                <td colspan="9" class="text-center">No products found</td>
             </tr>
             @endforelse
 

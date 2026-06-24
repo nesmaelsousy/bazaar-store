@@ -11,6 +11,11 @@
                     <h2 class="text-2xl font-bold text-[#5A3E2B] mb-6">
                         Delivery Information
                     </h2>
+                    @if ($errors->has('stock'))
+                        <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+                            {{ $errors->first('stock') }}
+                        </div>
+                    @endif
                     <form action="{{ route('frontend.checkout.store') }}" method="post">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -43,7 +48,7 @@
                                         class="text-[red]">*</span></label>
                                 <x-form.input name="country" type="text" placeholder="Palestine"
                                     class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#a05a1c] outline-none transition" />
-                            
+
                             </div>
 
                             <div>
@@ -81,9 +86,9 @@
                             <div>
                                 <label class="block mb-2 font-medium text-[#5A3E2B]">Floor
                                     <span class="text-[#91775e]">(optional)</span></label>
-                                    <x-form.input name="floor" type="text" placeholder="3rd Floor"
-                                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#a05a1c] outline-none transition"/>
-                                
+                                <x-form.input name="floor" type="text" placeholder="3rd Floor"
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#a05a1c] outline-none transition" />
+
                             </div>
 
                             <div>
@@ -91,8 +96,8 @@
                                     <span class="text-[#91775e]">(optional)</span>
                                 </label>
                                 <x-form.input name="apartment" type="text" placeholder="Apt 5"
-                                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#a05a1c] outline-none transition"/>
-                               
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#a05a1c] outline-none transition" />
+
                             </div>
 
                         </div>
@@ -142,12 +147,12 @@
                         </div>
                     </div>
                     <div class="flex justify-between">
-                        <button id="goToPayment"
-                            class="mt-6 w-1/2  bg-[#a05a1c] hover:bg-[#8b4e18] text-white py-3 rounded-lg font-semibold transition shadow-sm">
-                            Continue to Payment
-                        </button>
+                        <a href="{{ route('frontend.cart.index') }}" id="CancelPurchase"
+                            class="mt-6 text-center w-full ms-3 bg-[#fbefe9] text-[#8b4e18]  hover:bg-[#8b4e18] hover:text-[#fbefe9] py-3 rounded-lg font-semibold transition shadow-sm">
+                            Back to cart
+                        </a>
                         <a href="{{ route('frontend.index') }}" id="CancelPurchase"
-                            class="mt-6 text-center w-1/2 ms-3 bg-[#fbefe9] text-[#8b4e18]  hover:bg-[#8b4e18] hover:text-[#fbefe9] py-3 rounded-lg font-semibold transition shadow-sm">
+                            class="mt-6 text-center w-full ms-3 bg-[#fbefe9] text-[#8b4e18]  hover:bg-[#8b4e18] hover:text-[#fbefe9] py-3 rounded-lg font-semibold transition shadow-sm">
                             Cancel Purchase
                         </a>
 

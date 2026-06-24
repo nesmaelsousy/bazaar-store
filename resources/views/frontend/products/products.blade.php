@@ -59,7 +59,7 @@
                                 class="w-1/2 p-1 text-sm text-[#835837] border outline-none rounded-lg focus:ring-1 focus:ring-[#c8a98d]"
                                 value="{{ old('maxPrice', request('maxPrice')) }}" min="0" max="1000">
                         </div>
-                        <button type="submit">Filtet</button>
+                        
                     </div>
 
 
