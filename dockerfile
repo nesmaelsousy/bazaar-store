@@ -19,6 +19,6 @@ WORKDIR /var/www/html
 
 RUN chown -R www-data:www-data /var/www/html
 
-RUN sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf
+EXPOSE 80
 
 CMD ["apache2-foreground"]
