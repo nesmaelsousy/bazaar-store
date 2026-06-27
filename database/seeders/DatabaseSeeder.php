@@ -36,16 +36,18 @@ class DatabaseSeeder extends Seeder
         ]);
         User::insert([
             [
-                'name' => 'Nesma Wafay',
+                'name' => 'Customer Bzaar',
                 'email' => 'user@example.com',
+                'address' => 'Gaza',
                 'password' => bcrypt('password'),
                 'role' => 'client',
                 'slug' => 'nesma-wafay',
                 'username' => 'nesma-wafay',
             ],
             [
-                'name' => 'Nesma artisan',
+                'name' => 'Artisan Bazaar',
                 'email' => 'artisan@gmail.com',
+                'address' => 'Gaza',
                 'password' => bcrypt('password'),
                 'role' => 'craftsmen',
                 'slug' => 'nesmaartisan',

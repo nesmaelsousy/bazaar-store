@@ -33,6 +33,6 @@ class ContactController extends Controller
             $mail->to($message->email)
                 ->subject('Reply from Bazaar Support');
         });
-        return back()->with('success', 'Reply sent successfully!');
+        return back();
     }
 }

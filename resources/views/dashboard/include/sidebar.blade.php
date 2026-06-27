@@ -72,7 +72,7 @@
                                 <p>All craftsmen</p>
                             </a>
                         </li>
-                       
+
 
                     </ul>
                 </li>
@@ -203,25 +203,21 @@
 
 
 
-                <!-- Reports -->
-                <li class="nav-item has-treeview">
+                <li class="nav-item has-treeview {{ Route::is('admin.workshop.*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chart-bar"></i>
-                        <p>Reports <i class="right fas fa-angle-left"></i></p>
+                        <i class="far fa-envelope-open"></i>
+                        <p>Messages <i class="right fas fa-angle-left"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('admin.contact.index') }}"
+                                class="nav-link {{ Route::is('admin.workshop.index') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Sales Report</p>
+                                <p>All Messages</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Revenue Report</p>
-                            </a>
-                        </li>
+                      
+
                     </ul>
                 </li>
 

@@ -34,7 +34,7 @@ class WorkshopsController extends Controller
         $data['image'] = $this->UploadImage($request);
         Workshop::create($data);
         return redirect()->route('admin.workshop.index')
-            ->with('success', 'Workshop created successfully.');
+            ;
     }
 
     /**
@@ -78,7 +78,7 @@ class WorkshopsController extends Controller
             Storage::disk('public')->delete($old_image);
         }
 
-        return redirect()->route('admin.workshop.index')->with('warning', 'The workshop has been updated');
+        return redirect()->route('admin.workshop.index');
     }
 
     /**

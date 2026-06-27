@@ -14,10 +14,10 @@ class AdminSeed extends Seeder
     public function run(): void
     {
         Admin::create([
-            'name' => 'Nesma Wafay',
-            'username' => 'nesma-wafay',
-            'email' => 'n.elsosey@gmail.com',
-            'phone' => '201025371438',
+            'name' => 'Admin Bazaar',
+            'username' => 'admin_bazaar',
+            'email' => 'bazaar@gmail.com',
+            'phone' => '059123456',
             'password' => Hash::make('password'),
             'super_admin' => true,
             'status' => 'active',

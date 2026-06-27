@@ -44,7 +44,7 @@ class SettingController extends Controller
             $this->set('logo', $path);
         }
 
-        return back()->with('success', 'Settings updated successfully');
+        return back();
     }
     private function set($key, $value)
     {

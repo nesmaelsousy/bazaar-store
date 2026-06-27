@@ -27,7 +27,7 @@ class productRequest extends FormRequest
     return [
         'title' => 'required|string|max:255',
         'price' => 'required|numeric',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         'images' => 'nullable|array',
         'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         'colors'=>'nullable',

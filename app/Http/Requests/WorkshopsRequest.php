@@ -29,7 +29,7 @@ class WorkshopsRequest extends FormRequest
             'availableSlots'=>'required',
             'duration'=>'required',
             'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'status' => 'required|in:active,archived',
         ];
     }

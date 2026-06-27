@@ -45,7 +45,7 @@ class CategoryController extends Controller
         Category::create($data);
         // Redirect back to the index page with a success message
         return redirect()->route('admin.category.index')
-            ->with('success', 'Category created successfully.');
+           ;
     }
 
     /**
@@ -110,7 +110,7 @@ class CategoryController extends Controller
             Storage::disk('public')->delete($category->image);
         }
         $category->delete();
-        return redirect()->route('admin.category.index')->with('success', 'Category deleted.');
+        return redirect()->route('admin.category.index');
     }
     protected function UploadImage(Request $request)
     {

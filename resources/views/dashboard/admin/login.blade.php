@@ -33,14 +33,7 @@
                     <li><a href="workshops.html" class="block py-2 hover:text-[#E6B693] transition duration-300">Workshops</a></li>
                     <li><a href="contact.html" class="block py-2 hover:text-[#E6B693] transition duration-300">Contact Us</a></li>
                 </ul>
-                <div class="flex items-center gap-4">
-                    <button id="menu-btn" class="md:hidden text-2xl text-[#875E43]"><i id="menu-icon" class="fa-solid fa-bars"></i></button>
-                    <a href="favorites.html" class="text-lg text-[#875E43] hover:text-[#E6B693] transition duration-300"><i class="fa-regular fa-heart"></i></a>
-                    <a href="cart.html" class="relative text-lg text-[#875E43] hover:text-[#E6B693] transition duration-300 group">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex justify-center items-center rounded-full transition-all duration-300 group-hover:-translate-y-1">0</span>
-                    </a>
-                </div>
+               <div></div>
             </div>
         </nav>
     </header>
@@ -82,11 +75,7 @@
                             <span class="ms-2 text-sm text-[#835837]">{{ __('Remember me') }}</span>
                         </label>
                     </div>
-                    @if (Route::has('password.request'))
-                    <a id="goToForgot" class="text-sm text-left text-[#9A7F73] cursor-pointer underline hover:text-[#835837]" href="{{ route('password.request') }}">
-                        {{ __('Forgot your password?') }}
-                    </a>
-                    @endif
+                   
                 </div>
                 <x-primary-button class="ms-3">
                     {{ __('Log in') }}
